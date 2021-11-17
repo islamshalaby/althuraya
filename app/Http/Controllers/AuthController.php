@@ -34,7 +34,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         if ($request->login_type == 1) {
-            if(! $request->fcm_token || !$request->unique_id || !$request->type || !$request->login_type || !$request->email){
+            if(!$request->unique_id || !$request->type || !$request->login_type || !$request->email){
                 $response = APIHelpers::createApiResponse(true , 406 , 'Missing Required Fields' , 'بعض الحقول مفقودة' , null , $request->lang);
                 return response()->json($response , 406);
             }
@@ -45,7 +45,7 @@ class AuthController extends Controller
                 return response()->json($response, 401);
             }
         }elseif ($request->login_type == 2) {
-            if(! $request->fcm_token || !$request->unique_id || !$request->type || !$request->login_type || !$request->social_id || !$request->email){
+            if(!$request->unique_id || !$request->type || !$request->login_type || !$request->social_id || !$request->email){
                 $response = APIHelpers::createApiResponse(true , 406 , 'Missing Required Fields' , 'بعض الحقول مفقودة' , null , $request->lang);
                 return response()->json($response , 406);
             }
@@ -67,11 +67,14 @@ class AuthController extends Controller
                 if ($request->name) {
                     $name = $request->name;
                 }
-                
+                $fcm = '';
+                if ($request->fcm_token) {
+                    $fcm = $request->fcm_token;
+                }
                 $user = User::create([
                     'name' => $name,
                     'email' => $email,
-                    'fcm_token' => $request->fcm_token,
+                    'fcm_token' => $fcm,
                     'image' => $image,
                     'facebook_id' => $request->social_id
                 ]);
@@ -80,7 +83,7 @@ class AuthController extends Controller
                 auth()->login($user);
             }
         }else {
-            if(! $request->fcm_token || !$request->unique_id || !$request->type || !$request->login_type || !$request->social_id || !$request->email){
+            if(!$request->unique_id || !$request->type || !$request->login_type || !$request->social_id || !$request->email){
                 $response = APIHelpers::createApiResponse(true , 406 , 'Missing Required Fields' , 'بعض الحقول مفقودة' , null , $request->lang);
                 return response()->json($response , 406);
             }
@@ -102,11 +105,14 @@ class AuthController extends Controller
                 if ($request->name) {
                     $name = $request->name;
                 }
-                
+                $fcm = '';
+                if ($request->fcm_token) {
+                    $fcm = $request->fcm_token;
+                }
                 $user = User::create([
                     'name' => $name,
                     'email' => $email,
-                    'fcm_token' => $request->fcm_token,
+                    'fcm_token' => $fcm,
                     'image' => $image,
                     'google_id' => $request->social_id
                 ]);
@@ -118,20 +124,25 @@ class AuthController extends Controller
         
 
         $user = auth()->user();
-        
-        $user->fcm_token = $request->fcm_token;
+        if ($request->fcm_token) {
+            $user->fcm_token = $request->fcm_token;
+        }
         $user->save();
 
         $visitor = Visitor::where('unique_id' , $request->unique_id)->first();
         if($visitor){
             $visitor->user_id = $user->id;
             $visitor->unique_id = $request->unique_id;
-            $visitor->fcm_token = $request->fcm_token;
+            if ($request->fcm_token) {
+                $visitor->fcm_token = $request->fcm_token;
+            }
             $visitor->save();
         }else{
             $visitor = new Visitor();
             $visitor->unique_id = $request->unique_id;
-            $visitor->fcm_token = $request->fcm_token;
+            if ($request->fcm_token) {
+                $visitor->fcm_token = $request->fcm_token;
+            }
             $visitor->type = $request->type;
             $visitor->user_id = $user->id;
             $visitor->save();
@@ -160,7 +171,7 @@ class AuthController extends Controller
             'phone' => 'required',
             "email" => 'required',
             "password" => 'required',
-            "fcm_token" => 'required',
+            // "fcm_token" => 'required',
             "type" => "required", // 1 -> iphone , 2 -> android
             "unique_id" => "required",            
         ]);
@@ -198,18 +209,24 @@ class AuthController extends Controller
         $user->phone = $request->phone;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->fcm_token = $request->fcm_token;
+        if ($request->fcm_token) {
+            $user->fcm_token = $request->fcm_token;
+        }
         $user->save();
 
         $visitor = Visitor::where('unique_id' , $request->unique_id)->first();
         if($visitor){
             $visitor->user_id = $user->id;
-            $visitor->fcm_token = $user->fcm_token;
+            if ($request->fcm_token) {
+                $visitor->fcm_token = $user->fcm_token;
+            }
             $visitor->save();
         }else{
             $visitor = new Visitor();
             $visitor->unique_id = $request->unique_id;
-            $visitor->fcm_token = $user->fcm_token;
+            if ($request->fcm_token) {
+                $visitor->fcm_token = $user->fcm_token;
+            }
             $visitor->type = $request->type;
             $visitor->user_id = $user->id;
             $visitor->save();
