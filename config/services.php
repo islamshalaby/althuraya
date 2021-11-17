@@ -31,8 +31,8 @@ return [
     ],
 
     'facebook' => [
-        'client_id' => '222878809766585',
-        'client_secret' => '49fc87cd1cdbcba151b56d0a766b5dc3',
+        'client_id' => '613308916750476',
+        'client_secret' => 'a183a47ae0bd1c5ad3a48e647d7cc2ef',
         'redirect' => env('APP_URL').'/callback',
     ],
     'google' => [
