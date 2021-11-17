@@ -40,7 +40,7 @@ class GoogleController extends Controller
             
             if ($finduser) {
                 Auth::login($finduser);
-                return redirect('/home');
+                return redirect()->route('front.home');
             } else {
                 $newUser = User::create([
                     'name' => $user->name,
@@ -49,7 +49,7 @@ class GoogleController extends Controller
                     'password' => encrypt('123456dummy')
                 ]);
                 Auth::login($newUser);
-                return redirect('/home');
+                return redirect()->route('front.home');
             }
         } catch (Exception $e) {
             dd('here2');
