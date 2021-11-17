@@ -656,6 +656,7 @@
         "show_warnings" => "Show Warnings",
         "warnings" => "Warnings",
         "failed_to_create_order" => "Failed to create order from like card server",
-        "marked_as_read" => "Marked as read"
+        "marked_as_read" => "Marked as read",
+        "purchasing_price" => "Purchasing price"
     ];
 ?>
