@@ -197,7 +197,7 @@
                                 <h2 class="title-a">احدث العروض</h2>
                             </div>
                             <div class="title-link">
-                                <a href="{{route('front.offers')}}">جمبع العروض
+                                <a href="{{route('front.offers')}}">جميع العروض
                                     <span class="bi bi-chevron-left"></span>
                                 </a>
                             </div>

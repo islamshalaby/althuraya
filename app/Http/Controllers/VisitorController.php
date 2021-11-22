@@ -9,6 +9,7 @@ use App\Favorite;
 use App\Product;
 use App\Currency;
 use App\ProductVip;
+use App\ProductCountry;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -189,7 +190,15 @@ class VisitorController extends Controller
                 $product['count'] = 1;
                 $price = $product['final_price'];
                 $priceBOffer = $product['price_before_offer'];
-                
+                $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
+                if ($productCountry) {
+                    $price = $productCountry->price;
+                    $priceBOffer = $price;
+                    if ($product['offer'] == 1) {
+                        $offerVal = $price * ($product['offer_percentage'] / 100);
+                        $price = $price - $offerVal;
+                    }
+                }
                 if ($product->main_image) {
                     $product->main_image = $product->main_image->image;
                 }else {
@@ -202,9 +211,12 @@ class VisitorController extends Controller
                     if (!empty(auth()->user()->vip_id)) {
                         $productVip = ProductVip::where('vip_id', auth()->user()->vip_id)->where('product_id', $product['id'])->first();
                         if ($productVip) {
+                            if ($productCountry) {
+                                $price = $productCountry->price;
+                                $priceBOffer = $price;
+                            }
                             $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                             $price = $priceBOffer - $priceOffer;
-                            // $priceBOffer = $product['final_price'] * $currency['value'];
                             $product['offer'] = 1;
                             $product['offer_percentage'] = $productVip->percentage;
                         }
@@ -220,7 +232,6 @@ class VisitorController extends Controller
                 }
                 
                 $data['total'] = $data['total'] + number_format((float)$price, 3, '.', '');
-                // dd($data['total']);
                 $data['total'] = $data['total'] * $currency['value'];
                 $product['final_price'] = number_format((float)$price, 3, '.', '') * $currency['value'];
                 $product['final_price'] = number_format((float)$product['final_price'], 3, '.', '') . " " . $currencySympol;
@@ -236,9 +247,17 @@ class VisitorController extends Controller
                         ->first()
                         ->makeHidden('images');
                         $product['count'] = $cart[$i]['count'];
-                        $price = $product['final_price'];
-                        $priceBOffer = $product['price_before_offer'];
-                        
+                        $price = $product['final_price'] * $currency['value'];
+                        $priceBOffer = $product['price_before_offer'] * $currency['value'];
+                        $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
+                        if ($productCountry) {
+                            $price = $productCountry->price;
+                            $priceBOffer = $price;
+                            if ($product['offer'] == 1) {
+                                $offerVal = $price * ($product['offer_percentage'] / 100);
+                                $price = $price - $offerVal;
+                            }
+                        }
                         if ($product->main_image) {
                             $product->main_image = $product->main_image->image;
                         }else {
@@ -251,6 +270,10 @@ class VisitorController extends Controller
                             if (!empty(auth()->user()->vip_id)) {
                                 $productVip = ProductVip::where('vip_id', auth()->user()->vip_id)->where('product_id', $product['id'])->first();
                                 if ($productVip) {
+                                    if ($productCountry) {
+                                        $price = $productCountry->price;
+                                        $priceBOffer = $price;
+                                    }
                                     $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                                     $price = $priceBOffer - $priceOffer;
                                     $product['offer'] = 1;
@@ -267,10 +290,10 @@ class VisitorController extends Controller
                             $product->favorite = false;
                         }
                         $data['total'] = $data['total'] + ($price * $cart[$i]['count']);
-                        $data['total'] = number_format((float)$data['total'], 3, '.', '') * $currency['value'];
-                        $product['final_price'] = number_format((float)$price, 3, '.', '') * $currency['value'];
+                        $data['total'] = number_format((float)$data['total'], 3, '.', '');
+                        $product['final_price'] = number_format((float)$price, 3, '.', '');
                         $product['final_price'] = number_format((float)$product['final_price'], 3, '.', '') . " " . $currencySympol;
-                        $finalPriceBOffer = $priceBOffer * $currency['value'];
+                        $finalPriceBOffer = $priceBOffer;
                         $product['price_before_offer'] = number_format((float)$finalPriceBOffer, 3, '.', '') . " " . $currencySympol;
     
                         array_push($data['cart'], $product);
@@ -339,8 +362,6 @@ class VisitorController extends Controller
             $response = APIHelpers::createApiResponse(true , 406 , 'The remaining amount of the product is not enough' , 'الكميه المتبقيه من المنتج غير كافيه'  , null , $request->lang);
             return response()->json($response , 406);
         }
-        
-        
 
         if($visitor){
             

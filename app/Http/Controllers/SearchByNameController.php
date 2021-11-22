@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
-use App\Address;
+use App\ProductCountry;
 use App\Visitor;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -82,12 +82,24 @@ class SearchByNameController extends Controller
                     }
                     $price = $data[$i]['final_price'] * $currency['value'];
                     $priceBOffer = $data[$i]['price_before_offer'] * $currency['value'];
-
+                    $productCountry = ProductCountry::where('product_id', $data[$i]->id)->where('country_id', $visitor->country->id)->first();
+                    if ($productCountry) {
+                        $price = $productCountry->price;
+                        $priceBOffer = $price;
+                        if ($data[$i]['offer'] == 1) {
+                            $offerVal = $price * ($data[$i]['offer_percentage'] / 100);
+                            $price = $price - $offerVal;
+                        }
+                    }
                     $user = auth()->user();
                     if($user){
                         if (!empty(auth()->user()->vip_id)) {
                             $productVip = ProductVip::where('vip_id', auth()->user()->vip_id)->where('product_id', $data[$i]['id'])->first();
                             if ($productVip) {
+                                if ($productCountry) {
+                                    $price = $productCountry->price;
+                                    $priceBOffer = $price;
+                                }
                                 $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                                 $price = $priceBOffer - $priceOffer;
                                 $data[$i]['offer'] = 1;

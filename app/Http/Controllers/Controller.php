@@ -27,6 +27,7 @@ use App\Cart;
 use App\WebVisitor;
 use App\Country;
 use App\ProductVip;
+use App\ProductCountry;
 use Illuminate\Http\Request;
 use Stevebauman\Location\Facades\Location;
 
@@ -38,6 +39,7 @@ class Controller extends BaseController
     protected $ip;
     public $cats;
     protected $meta;
+    public $country;
 
     public function __construct()
     {
@@ -92,9 +94,10 @@ class Controller extends BaseController
                     ->first()
                     ->makeHidden('images');
                     $product['count'] = $cart[$i]['count'];
-                    $price = $product['final_price'];
-                    $originalPrice = $product['final_price'] * $all_currency_data['value'] * $cart[$i]['count'];
-                    $priceBOffer = $product['price_before_offer'];
+                    $price = $product['final_price']* $all_currency_data['value'];
+                    
+                    $originalPrice = $price * $cart[$i]['count'];
+                    $priceBOffer = $product['price_before_offer'] * $all_currency_data['value'];
                     if ($product->main_image) {
                         $product->main_image = $product->main_image->image;
                     }else {
@@ -102,6 +105,16 @@ class Controller extends BaseController
                             $product->main_image = $product->images[0]->image;
                         }
                     }
+                    $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $currency_data['currency']->id)->first();
+                    if ($productCountry) {
+                        $price = $productCountry->price;
+                        $priceBOffer = $price;
+                        if ($product['offer'] == 1) {
+                            $offerVal = $price * ($product['offer_percentage'] / 100);
+                            $price = $price - $offerVal;
+                        }
+                    }
+                    
                     $user = auth()->guard('user')->user();
                     if($user){
                         
@@ -109,6 +122,10 @@ class Controller extends BaseController
                             $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $product['id'])->first();
                             
                             if ($productVip) {
+                                if ($productCountry) {
+                                    $price = $productCountry->price;
+                                    $priceBOffer = $price;
+                                }
                                 $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                                 $originalPriceOffer = $originalPrice * ($productVip->percentage / 100);
                                 $price = $priceBOffer - $priceOffer;
@@ -127,20 +144,22 @@ class Controller extends BaseController
                     }else{
                         $product->favorite = false;
                     }
-                    
-                    $this->totalAdded = $this->totalAdded + (number_format((float)$price, 3, '.', '') * $all_currency_data['value'] * $cart[$i]['count']);
+                    // var_dump($priceBOffer);
+                    $this->totalAdded = $this->totalAdded + (number_format((float)$price, 3, '.', '') * $cart[$i]['count']);
                     $this->totalAdded = number_format((float)$this->totalAdded, 3, '.', '');
                     $this->totalKwd = $this->totalKwd + $originalPrice;
                     
-                    $product['final_price'] = number_format((float)$price, 3, '.', '') * $all_currency_data['value'];
+                    $product['final_price'] = number_format((float)$price, 3, '.', '');
+                    
                     $product['final_price'] = number_format((float)$product['final_price'], 3, '.', '');
-                    $finalPriceBOffer = number_format((float)$priceBOffer, 3, '.', '') * $all_currency_data['value'];
+                    $finalPriceBOffer = number_format((float)$priceBOffer, 3, '.', '');
                     $product['price_before_offer'] = number_format((float)$finalPriceBOffer, 3, '.', '');
                     $product['product_id'] = $product['id'];
                     $product['id'] = $cart[$i]['id'];
                     array_push($data['cart'], $product);
                 }
             }
+            $this->country = $currency_data['currency'];
             $this->meta = MetaTag::find(1);
             $this->totalAdded = number_format((float)$this->totalAdded, 3, '.', '');
             view()->share('settings', $this->settings);

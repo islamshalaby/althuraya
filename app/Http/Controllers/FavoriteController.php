@@ -10,6 +10,7 @@ use App\Product;
 use App\Currency;
 use App\Visitor;
 use App\ProductVip;
+use App\ProductCountry;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\APIHelpers;
@@ -97,9 +98,7 @@ class FavoriteController extends Controller
                         $currency->update(['value' => $result['value'], 'updated_at' => Carbon::now()]);
                         $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
                     }
-                    
                 }
-                
             }else {
                 $result = APIHelpers::converCurruncy2("usd", $toCurr);
                 // dd($result);
@@ -138,6 +137,15 @@ class FavoriteController extends Controller
                 
                 $price = $products[$i]['final_price'] * $currency['value'];
                 $priceBOffer = $products[$i]['price_before_offer'] * $currency['value'];
+                $productCountry = ProductCountry::where('product_id', $products[$i]->id)->where('country_id', $visitor->country->id)->first();
+                if ($productCountry) {
+                    $price = $productCountry->price;
+                    $priceBOffer = $price;
+                    if ($products[$i]['offer'] == 1) {
+                        $offerVal = $price * ($products[$i]['offer_percentage'] / 100);
+                        $price = $price - $offerVal;
+                    }
+                }
                 $currencySympol = $visitor->country->currency_en;
                 if ($request->lang == 'ar') {
                     $currencySympol = $visitor->country->currency_ar;
@@ -146,6 +154,10 @@ class FavoriteController extends Controller
                 
                     $productVip = ProductVip::where('vip_id', auth()->user()->vip_id)->where('product_id', $products[$i]['id'])->first();
                     if ($productVip) {
+                        if ($productCountry) {
+                            $price = $productCountry->price;
+                            $priceBOffer = $price;
+                        }
                         $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                         $price = $priceBOffer - $priceOffer;
                         $products[$i]['offer'] = 1;

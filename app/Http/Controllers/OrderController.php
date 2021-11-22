@@ -20,7 +20,7 @@ use App\Currency;
 use App\OrderSerial;
 use App\StoreNotification;
 use App\ProductVip;
-use App\Serial;
+use App\ProductCountry;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -43,21 +43,27 @@ class OrderController extends Controller
         
         if ($visitor && !empty($visitor->country_code)) {
             $currency = $visitor->country->currency_en;
-            $currency = Currency::where('from', "usd")->where('to', 'kwd')->first();
+            $toCurr = trim(strtolower($currency));
+            if ($toCurr == "usd") {
+                $currency = ["value" => 1];
+            }else {
+                $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
+            }
             if (isset($currency['id'])) {
                 if (!$currency->updated_at->isToday()) {
-                    $result = APIHelpers::converCurruncy2("usd", 'kwd');
+                    $result = APIHelpers::converCurruncy2("usd", $toCurr);
                     if(isset($result['value'])){
                         $currency->update(['value' => $result['value'], 'updated_at' => Carbon::now()]);
-                        $currency = Currency::where('from', "usd")->where('to', 'kwd')->first();
+                        $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
                     }
+                    
                 }
-            }else {
-                $result = APIHelpers::converCurruncy2("usd", 'kwd');
                 
+            }else {
+                $result = APIHelpers::converCurruncy2("usd", $toCurr);
                 if(isset($result['value']) && !$currency){
-                    $result = APIHelpers::converCurruncy2("usd", 'kwd');
-                    $currency = Currency::create(['value' => $result['value'], "from" => "usd", "to" => 'kwd']);
+                    $result = APIHelpers::converCurruncy2("usd", $toCurr);
+                    $currency = Currency::create(['value' => $result['value'], "from" => "usd", "to" => $toCurr]);
                 }
             }
             $cart = Cart::where('visitor_id', $visitor->id)->get();
@@ -65,7 +71,7 @@ class OrderController extends Controller
             if (count($cart) > 0) {
                 for ($i = 0; $i < count($cart); $i++) {
                     $product = Product::where('deleted', 0)->where('hidden', 0)->where('id', $cart[$i]->product_id)->first();
-                    if ($cart[$i]->product->remaining_quantity < $cart[$i]['count'] && count($product->serials) < $cart[$i]['count']) {
+                    if ($cart[$i]->product->remaining_quantity < $cart[$i]['count']) {
                         $response = APIHelpers::createApiResponse(true , 406 , 'Remaining Quantity is not enough' , 'الكمية المتبقية غير كافية' , null , $request->lang);
                         return response()->json($response , 406);
                     }
@@ -77,11 +83,29 @@ class OrderController extends Controller
                 for ($i = 0; $i < count($cart); $i ++) {
                     $product = Product::where('deleted', 0)->where('hidden', 0)->where('id', $cart[$i]->product_id)->first();
                     $price = $product['final_price'];
+                    $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
+                    if ($productCountry) {
+                        // dd($currency['value']);
+                        $price = $productCountry->price;
+                        $product['price_before_offer'] = $price;
+                        
+                        if ($product['offer'] == 1) {
+                            $offerVal = $price * ($product['offer_percentage'] / 100);
+                            $price = $price - $offerVal;
+                        }
+                        $price = $price / $currency['value'];
+                    }
+                    
                     if (!empty(auth()->user()->vip_id)) {
                         $productVip = ProductVip::where('vip_id', auth()->user()->vip_id)->where('product_id', $product['id'])->first();
                         if ($productVip) {
+                            if ($productCountry) {
+                                $price = $productCountry->price / $currency['value'];
+                            }
+                            
                             $priceOffer = $price * ($productVip->percentage / 100);
                             $price = ($price  * $cart[$i]['count']) - ($priceOffer  * $cart[$i]['count']);
+                            
                         }
                     }else {
                         $price = $price * $cart[$i]['count'];
@@ -143,6 +167,7 @@ class OrderController extends Controller
         }
         
     }
+
     // decrypt like card serial numbers
     public function decryptSerial($encrypted_txt){    
         $secret_key = env('LIKECARD_SECRET_KEY');    
@@ -155,26 +180,32 @@ class OrderController extends Controller
       
         return openssl_decrypt(base64_decode($encrypted_txt), $encrypt_method, $key, 0, $iv);        
     }
+    
     public function execute(Request $request){
         $visitor = Visitor::where('unique_id', $request->unique_id)->select('id', 'country_code')->first();
         if ($visitor && !empty($visitor->country_code)) {
             $currency = $visitor->country->currency_en;
-            $currency = Currency::where('from', "usd")->where('to', 'kwd')->first();
+            $toCurr = trim(strtolower($currency));
+            if ($toCurr == "usd") {
+                $currency = ["value" => 1];
+            }else {
+                $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
+            }
             if (isset($currency['id'])) {
                 if (!$currency->updated_at->isToday()) {
-                    $result = APIHelpers::converCurruncy2("usd", 'kwd');
+                    $result = APIHelpers::converCurruncy2("usd", $toCurr);
                     if(isset($result['value'])){
                         $currency->update(['value' => $result['value'], 'updated_at' => Carbon::now()]);
-                        $currency = Currency::where('from', "usd")->where('to', 'kwd')->first();
+                        $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
                     }
+                    
                 }
                 
             }else {
-                $result = APIHelpers::converCurruncy2("usd", 'kwd');
-                // dd($result);
+                $result = APIHelpers::converCurruncy2("usd", $toCurr);
                 if(isset($result['value']) && !$currency){
-                    $result = APIHelpers::converCurruncy2("usd", 'kwd');
-                    $currency = Currency::create(['value' => $result['value'], "from" => "usd", "to" => 'kwd']);
+                    $result = APIHelpers::converCurruncy2("usd", $toCurr);
+                    $currency = Currency::create(['value' => $result['value'], "from" => "usd", "to" => $toCurr]);
                 }
             }
             $cart = Cart::where('visitor_id', $visitor->id)->get();
@@ -203,9 +234,24 @@ class OrderController extends Controller
                     $product = Product::where('deleted', 0)->where('hidden', 0)->where('id', $cart[$i]['product_id'])->first();
                     $price = $product['final_price'];
                     $priceBOffer = $product['price_before_offer'];
+                    $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
+                    if ($productCountry) {
+                        $price = $productCountry->price;
+                        $priceBOffer = $price;
+                        if ($product['offer'] == 1) {
+                            $offerVal = $price * ($product['offer_percentage'] / 100);
+                            $price = $price - $offerVal;
+                        }
+                        $price = $price / $currency['value'];
+                    }
+                    
                     if (!empty($user->vip_id)) {
                         $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $product['id'])->first();
                         if ($productVip) {
+                            if ($productCountry) {
+                                $price = $productCountry->price;
+                                $priceBOffer = $price;
+                            }
                             $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                             $price = $priceBOffer - $priceOffer;
                             $product['offer_percentage'] = $productVip->percentage;
@@ -433,16 +479,31 @@ class OrderController extends Controller
             }
             $product = Product::where('id', $request->product_id)->first();
             $price = $product['final_price'];
+            $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
+            if ($productCountry) {
+                // dd($currency['value']);
+                $price = $productCountry->price;
+                $product['price_before_offer'] = $price;
+                
+                if ($product['offer'] == 1) {
+                    $offerVal = $price * ($product['offer_percentage'] / 100);
+                    $price = $price - $offerVal;
+                }
+                $price = $price / $currency['value'];
+            }
             
             if (!empty(auth()->user()->vip_id)) {
                 $productVip = ProductVip::where('vip_id', auth()->user()->vip_id)->where('product_id', $product['id'])->first();
                 if ($productVip) {
+                    if ($productCountry) {
+                        $price = $productCountry->price / $currency['value'];
+                    }
                     $priceOffer = $product['price_before_offer'] * ($productVip->percentage / 100);
                     $price = $product['price_before_offer'] - $priceOffer;
                 }
             }
             
-            $root_url = $request->root();
+            $root_url = 'http://127.0.0.1:8000';
             $user = auth()->user();
             
             $path='https://apitest.myfatoorah.com/v2/SendPayment';
@@ -496,7 +557,30 @@ class OrderController extends Controller
     public function excute_pay(Request $request){
         $user = User::find($request->user_id);
         $visitor  = Visitor::where('unique_id' , $request->unique_id)->first();
-        
+        $currency = $visitor->country->currency_en;
+        $toCurr = trim(strtolower($currency));
+        if ($toCurr == "usd") {
+            $currency = ["value" => 1];
+        }else {
+            $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
+        }
+        if (isset($currency['id'])) {
+            if (!$currency->updated_at->isToday()) {
+                $result = APIHelpers::converCurruncy2("usd", $toCurr);
+                if(isset($result['value'])){
+                    $currency->update(['value' => $result['value'], 'updated_at' => Carbon::now()]);
+                    $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
+                }
+                
+            }
+            
+        }else {
+            $result = APIHelpers::converCurruncy2("usd", $toCurr);
+            if(isset($result['value']) && !$currency){
+                $result = APIHelpers::converCurruncy2("usd", $toCurr);
+                $currency = Currency::create(['value' => $result['value'], "from" => "usd", "to" => $toCurr]);
+            }
+        }
         $now = Carbon::now();
         $lastOrder = Order::orderBy('id', 'desc')->first();
         $orderNumber = $now->year . $now->month . $now->day . "01";
@@ -510,10 +594,23 @@ class OrderController extends Controller
         $product = Product::where('id', $request->product_id)->first();
         $price = $product['final_price'];
         $priceBOffer = $product['price_before_offer'];
-        
+        $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
+        if ($productCountry) {
+            $price = $productCountry->price;
+            $priceBOffer = $price;
+            if ($product['offer'] == 1) {
+                $offerVal = $price * ($product['offer_percentage'] / 100);
+                $price = $price - $offerVal;
+            }
+            $price = $price / $currency['value'];
+        }
         if (!empty($user->vip_id)) {
             $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $product['id'])->first();
             if ($productVip) {
+                if ($productCountry) {
+                    $price = $productCountry->price;
+                    $priceBOffer = $price;
+                }
                 $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                 $price = $priceBOffer - $priceOffer;
                 $product['offer_percentage'] = $productVip->percentage;

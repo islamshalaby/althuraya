@@ -5,7 +5,7 @@ use App\Helpers\APIHelpers;
 use App\Favorite;;
 use App\Product;
 use App\Ad;
-use App\SliderAd;
+use App\ProductCountry;
 use App\Currency;
 use App\ProductVip;
 use App\Country;
@@ -52,12 +52,10 @@ class HomeController extends Controller
                         $currency->update(['value' => $result['value'], 'updated_at' => Carbon::now()]);
                         $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
                     }
-                    
                 }
                 
             }else {
                 $result = APIHelpers::converCurruncy2("usd", $toCurr);
-                // dd($result);
                 if(isset($result['value']) && !$currency){
                     $result = APIHelpers::converCurruncy2("usd", $toCurr);
                     $currency = Currency::create(['value' => $result['value'], "from" => "usd", "to" => $toCurr]);
@@ -77,17 +75,27 @@ class HomeController extends Controller
                 
                 $price = $data[$i]['final_price'] * $currency['value'];
                 $priceBOffer = $data[$i]['price_before_offer'] * $currency['value'];
-                
+                $productCountry = ProductCountry::where('product_id', $data[$i]->id)->where('country_id', $visitor->country->id)->first();
+                if ($productCountry) {
+                    $price = $productCountry->price;
+                    $priceBOffer = $price;
+                    if ($data[$i]['offer'] == 1) {
+                        $offerVal = $price * ($data[$i]['offer_percentage'] / 100);
+                        $price = $price - $offerVal;
+                    }
+                }
                 if(auth()->user()){
                     
                     if (!empty(auth()->user()->vip_id)) {
                         
                         $productVip = ProductVip::where('vip_id', auth()->user()->vip_id)->where('product_id', $data[$i]['id'])->first();
                         if ($productVip) {
+                            if ($productCountry) {
+                                $price = $productCountry->price;
+                                $priceBOffer = $price;
+                            }
                             $priceOffer = $price * ($productVip->percentage / 100);
                             $price = $price - $priceOffer;
-                            $priceBOfferOffer = $priceBOffer * ($productVip->percentage / 100);
-                            $priceBOffer = $priceBOffer - $priceBOfferOffer;
                             $data[$i]['offer'] = 1;
                             $data[$i]['offer_percentage'] = $productVip->percentage;
                         }

@@ -547,7 +547,7 @@ class ProductController extends AdminController{
         $data['types'] = ProductType::orderBy('id', 'desc')->get();
         $data['Home_sections'] = HomeSection::where('type', 4)->get();
         $data['countries'] = Country::orderBy('country_name', 'asc')->get();
-        $data['vips'] = Vip::orderBy('id', 'desc')->get()->toArray();
+        $data['vips'] = Vip::orderBy('id', 'desc')->get();
         
         
         $data['stores'] = Shop::get();

@@ -925,48 +925,6 @@
             })
             
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script>
-        var percentageFor = '{{ __('messages.percentage_for') }}'
-
-        var appVips = {
-            data : function () {
-                return {
-                    vipVal : 0
-                }
-            },
-            props : ['vips', 'title', 'id', 'sePrice', 'source'],
-            methods : {
-                getPerc () {
-                    this.vipVal = this.$refs.selling.value * (this.vipVal / 100)
-                    console.log(this.vipVal)
-                }
-            },
-            template : `
-            <div class="form-group mb-4">
-                <label :for="'vip' + id">${percentageFor} @{{ title }} *</label>
-                <input type="hidden" name="vip_id[]" :value="id" />
-                <input @keydown="getPerc()" step="any" min="0" name="vip_percentage[]" class="form-control" id="'vip' + id" v-model="vipVal" >
-            </div>
-            `
-        }
-        var vips = <?php echo json_encode($data['vips'], true); ?>
-        
-        var vm = new Vue({
-            el : '#single-details',
-            data () {
-                return {
-                    source : 0.000,
-                    sePrice : 0.000,
-                    vipVal : 0,
-                    vips
-                }
-            },
-            components : {
-                'app-vips' : appVips
-            }
-        })
-    </script>
     
 @endpush
 
@@ -1071,7 +1029,13 @@
                                 <div class="price-container">
 
                                 </div>
-                                <app-vips v-for="vip in vips" :id="vip.id" :title="vip.title_en" ></app-vips>
+                                @foreach ($data['vips'] as $vip)
+                                <div class="form-group mb-4">
+                                    <label for="vip{{ $vip->id }}">{{ __('messages.percentage_for') }} {{ App::isLocale('en') ? $vip->title_en : $vip->title_ar }} *</label>
+                                    <input type="hidden" name="vip_id[]" value="{{ $vip->id }}" />
+                                    <input required type="number" step="any" min="0" name="vip_percentage[]" class="form-control" id="vip{{ $vip->id }}" placeholder="{{ __('messages.percentage_for') }} {{ App::isLocale('en') ? $vip->title_en : $vip->title_ar }}" value="{{ old('price_before_offer') }}" >
+                                </div>
+                                @endforeach
                             </div>
                             <div style="margin-bottom: 20px; margin-top : 20px" class="col-md-3" >
                                 <div >

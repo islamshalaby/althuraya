@@ -19,7 +19,7 @@
                                 @else
                                 <a href="{{ route('front.login') }}" class="favorite-pr {{ $data->favorite == true ? 'Active' : '' }}"><i></i></a>
                                 @endif
-                                <img src="https://res.cloudinary.com/al-thuraya/image/upload/w_260,q_100/v1581928924/{{ $data->images[0] }}" class="img-fluid" alt="">
+                                <img src="https://res.cloudinary.com/al-thuraya/image/upload/w_260,q_100/v1581928924/{{ $data->main_image }}" class="img-fluid" alt="">
                             </div>
                         </div>
                         <div class="col-lg-9 col-md-8 col-12">

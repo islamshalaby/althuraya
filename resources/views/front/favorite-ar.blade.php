@@ -62,7 +62,7 @@
                                     @else
                                         <div class="PriceDiscount">
                                             <div class="PriceBox">
-                                                {{$row->price_before_offer}} {{ $currency_data['currency']->currency_ar }}
+                                                {{$row->final_price}} {{ $currency_data['currency']->currency_ar }}
                                             </div>
                                         </div>
                                     @endif

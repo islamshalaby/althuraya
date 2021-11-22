@@ -22,6 +22,7 @@ use Carbon\Carbon;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Mail;
 use App\Helpers\APIHelpers;
+use App\ProductCountry;
 use App\Warning;
 
 class HomeController extends Controller{
@@ -57,16 +58,28 @@ class HomeController extends Controller{
                         $data['recent_offers'][$i]->main_image = $data['recent_offers'][$i]->images[0]->image;
                     }
                 }
-
+                
                 $price = $data['recent_offers'][$i]['final_price'] * $currency['value'];
                 $priceBOffer = $data['recent_offers'][$i]['price_before_offer'] * $currency['value'];
-
+                $productCountry = ProductCountry::where('product_id', $data['recent_offers'][$i]->id)->where('country_id', $this->country->id)->first();
+                if ($productCountry) {
+                    $price = $productCountry->price;
+                    $priceBOffer = $price;
+                    if ($data['recent_offers'][$i]['offer'] == 1) {
+                        $offerVal = $price * ($data['recent_offers'][$i]['offer_percentage'] / 100);
+                        $price = $price - $offerVal;
+                    }
+                }
                 if(auth()->guard('user')->user()){
-
+                    
                     if (!empty(auth()->guard('user')->user()->vip_id)) {
 
                         $productVip = ProductVip::where('vip_id', auth()->guard('user')->user()->vip_id)->where('product_id', $data['recent_offers'][$i]['id'])->first();
                         if ($productVip) {
+                            if ($productCountry) {
+                                $price = $productCountry->price;
+                                $priceBOffer = $price;
+                            }
                             $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                             $price = $priceBOffer - $priceOffer;
                             $data['recent_offers'][$i]['offer'] = 1;
@@ -102,13 +115,25 @@ class HomeController extends Controller{
 
                 $price = $data['recent_product'][$i]['final_price'] * $currency['value'];
                 $priceBOffer = $data['recent_product'][$i]['price_before_offer'] * $currency['value'];
-
+                $productCountry = ProductCountry::where('product_id', $data['recent_product'][$i]->id)->where('country_id', $this->country->id)->first();
+                if ($productCountry) {
+                    $price = $productCountry->price;
+                    $priceBOffer = $price;
+                    if ($data['recent_product'][$i]['offer'] == 1) {
+                        $offerVal = $price * ($data['recent_product'][$i]['offer_percentage'] / 100);
+                        $price = $price - $offerVal;
+                    }
+                }
                 if(auth()->guard('user')->user()){
 
                     if (!empty(auth()->guard('user')->user()->vip_id)) {
-
+                        
                         $productVip = ProductVip::where('vip_id', auth()->guard('user')->user()->vip_id)->where('product_id', $data['recent_product'][$i]['id'])->first();
                         if ($productVip) {
+                            if ($productCountry) {
+                                $price = $productCountry->price;
+                                $priceBOffer = $price;
+                            }
                             $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                             $price = $priceBOffer - $priceOffer;
                             $data['recent_product'][$i]['offer'] = 1;
@@ -212,64 +237,7 @@ class HomeController extends Controller{
             $toCurr = $webVisitor->country->currency_en;
             $currency = $this->gSliderAdetCurrency($toCurr);
             $request->lang = 'ar';
-            $data = Product::where('deleted', 0)->where('hidden', 0);
-            if ($request->category_id) {
-                $data = $data->where('category_id', $request->category_id);
-            }
-            if ($request->sub_category_id) {
-                $data = $data->where('sub_category_id', $request->sub_category_id);
-            }
-            if ($request->sub_category_two_id) {
-                $data = $data->where('sub_category_two_id', $request->sub_category_two_id);
-            }
-            if ($request->sub_category_three_id) {
-                $data = $data->where('sub_category_three_id', $request->sub_category_three_id);
-            }
-            if ($request->sub_category_four_id) {
-                $data = $data->where('sub_category_four_id', $request->sub_category_four_id);
-            }
-            if ($request->sub_category_five_id) {
-                $data = $data->where('sub_category_five_id', $request->sub_category_five_id);
-            }
-            
-            $data = $data->select('id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief')->orderBy('id','desc')->paginate(12);
-            $data->makeHidden('images');
-            if (count($data) > 0) {
-                for ($i = 0; $i < count($data); $i ++) {
-                    if ($data[$i]->main_image) {
-                        $data[$i]->main_image = $data[$i]->main_image->image;
-                    }else {
-                        if (count($data[$i]->images) > 0) {
-                            $data[$i]->main_image = $data[$i]->images[0]->image;
-                        }
-                    }
-                    $price = $data[$i]['final_price'] * $currency['value'];
-                    $priceBOffer = $data[$i]['price_before_offer'] * $currency['value'];
-
-                    $user = auth()->guard('user')->user();
-                    if($user){
-                        if (!empty($user->vip_id)) {
-                            $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $data[$i]['id'])->first();
-                            if ($productVip) {
-                                $priceOffer = $priceBOffer * ($productVip->percentage / 100);
-                                $price = $priceBOffer - $priceOffer;
-                                $data[$i]['offer'] = 1;
-                                $data[$i]['offer_percentage'] = $productVip->percentage;
-                            }
-                        }
-                        $favorite = Favorite::where('user_id' , $user->id)->where('product_id' , $data[$i]['id'])->first();
-                        if($favorite){
-                            $data[$i]['favorite'] = true;
-                        }else{
-                            $data[$i]['favorite'] = false;
-                        }
-                    }else{
-                        $data[$i]['favorite'] = false;
-                    }
-                    $data[$i]['final_price'] = number_format((float)$price, 3, '.', '');
-                    $data[$i]['price_before_offer'] = number_format((float)$priceBOffer, 3, '.', '');
-                }
-            }
+            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief'], [], 'paginate', 12, ['images'], $currency['value'], $this->country->id, auth()->guard('user')->user(), $request->category_id, $request->sub_category_id, $request->sub_category_two_id, $request->sub_category_three_id, $request->sub_category_four_id, $request->sub_category_five_id);
 
             return view('front.products-list-ar',compact('data','currency_data','web_image'));
         }else {
@@ -316,6 +284,15 @@ class HomeController extends Controller{
 
             $price = $data['recent_offers'][$i]['final_price'] * $currency['value'];
             $priceBOffer = $data['recent_offers'][$i]['price_before_offer'] * $currency['value'];
+            $productCountry = ProductCountry::where('product_id', $data['recent_offers'][$i]->id)->where('country_id', $this->country->id)->first();
+            if ($productCountry) {
+                $price = $productCountry->price;
+                $priceBOffer = $price;
+                if ($data['recent_offers'][$i]['offer'] == 1) {
+                    $offerVal = $price * ($data['recent_offers'][$i]['offer_percentage'] / 100);
+                    $price = $price - $offerVal;
+                }
+            }
 
             if(auth()->guard('user')->user()){
 
@@ -323,6 +300,10 @@ class HomeController extends Controller{
 
                     $productVip = ProductVip::where('vip_id', auth()->guard('user')->user()->vip_id)->where('product_id', $data['recent_offers'][$i]['id'])->first();
                     if ($productVip) {
+                        if ($productCountry) {
+                            $price = $productCountry->price;
+                            $priceBOffer = $price;
+                        }
                         $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                         $price = $priceBOffer - $priceOffer;
                         $data['recent_offers'][$i]['offer'] = 1;
@@ -357,9 +338,11 @@ class HomeController extends Controller{
     public function order_details_ar(){
         return view('front.order-details-ar');
     }
+
     public function change_password_ar(){
         return view('front.change-password-ar');
     }
+
     public function forgot_password_ar(){
         return view('front.forgot-password-ar');
     }
@@ -411,43 +394,7 @@ class HomeController extends Controller{
             $toCurr = $webVisitor->country->currency_en;
             $currency = $this->gSliderAdetCurrency($toCurr);
 
-            $data = Product::where('id', $id)->select('id', 'title_ar as title', 'offer', 'description_ar as description', 'final_price', 'price_before_offer', 'offer_percentage', 'category_id')->first()->makeHidden('category');
-
-            if ($request->lang == 'en') {
-                $data['category_name'] = $data->category->title_en;
-            }else {
-                $data['category_name'] = $data->category->title_ar;
-            }
-            $price = $data['final_price'] * $currency['value'];
-            $priceBOffer = $data['price_before_offer'] * $currency['value'];
-            if(auth()->guard('user')->user()){
-                $user_id = auth()->guard('user')->user()->id;
-                if (!empty(auth()->guard('user')->user()->vip_id)) {
-
-                    $productVip = ProductVip::where('vip_id', auth()->guard('user')->user()->vip_id)->where('product_id', $data['id'])->first();
-                    if ($productVip) {
-                        $priceOffer = $priceBOffer * ($productVip->percentage / 100);
-                        $price = $priceBOffer - $priceOffer;
-                        $data['offer'] = 1;
-                        $data['offer_percentage'] = $productVip->percentage;
-                    }
-
-                }
-                $prevfavorite = Favorite::where('product_id' , $data['id'])->where('user_id' , $user_id)->first();
-                if($prevfavorite){
-                    $data['favorite'] = true;
-                }else{
-                    $data['favorite'] = false;
-                }
-
-            }else{
-                $data['favorite'] = false;
-            }
-            $data['final_price'] = number_format((float)$price, 3, '.', '');
-            $data['price_before_offer'] = number_format((float)$priceBOffer, 3, '.', '');
-            for ($k = 0; $k < count($data->images); $k ++) {
-                $data['images'][$k] = $data->images[$k]['image'];
-            }
+            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'description_ar as description', 'final_price', 'price_before_offer', 'offer_percentage', 'category_id'], [], 'first', 0, ['category'], $currency['value'], $this->country->id, auth()->guard('user')->user(), 0, 0, 0, 0, 0, 0, $id);
 
             $request->type = 'recent';
             $recent_offers = $this->getOffersTypes($request, $data['id']);
@@ -460,20 +407,33 @@ class HomeController extends Controller{
                         $recent_offers[$i]->main_image = $recent_offers[$i]->images[0]->image;
                     }
                 }
-
+                $price = $recent_offers[$i]['final_price'] * $currency['value'];
+                $priceBOffer = $recent_offers[$i]['price_before_offer'] * $currency['value'];
+                $productCountry = ProductCountry::where('product_id', $recent_offers[$i]->id)->where('country_id', $this->country->id)->first();
+                if ($productCountry) {
+                    $price = $productCountry->price;
+                    $priceBOffer = $price;
+                    if ($recent_offers[$i]['offer'] == 1) {
+                        $offerVal = $price * ($recent_offers[$i]['offer_percentage'] / 100);
+                        $price = $price - $offerVal;
+                    }
+                }
+                
                 if(auth()->guard('user')->user()){
 
                     if (!empty(auth()->guard('user')->user()->vip_id)) {
-
-                        $productVip = ProductVip::where('vip_id', auth()->guard('user')->user()->vip_id)->where('product_id', $data['id'])->first();
+                        $productVip = ProductVip::where('vip_id', auth()->guard('user')->user()->vip_id)->where('product_id', $recent_offers[$i]['id'])->first();
                         if ($productVip) {
+                            if ($productCountry) {
+                                $price = $productCountry->price;
+                                $priceBOffer = $price;
+                            }
                             $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                             $price = $priceBOffer - $priceOffer;
-                            $priceBOfferOffer = $priceBOffer * ($productVip->percentage / 100);
-                            $priceBOffer = $priceBOffer - $priceBOfferOffer;
                             $recent_offers[$i]['offer'] = 1;
                             $recent_offers[$i]['offer_percentage'] = $productVip->percentage;
                         }
+                        
                     }
                     $user_id = auth()->guard('user')->user()->id;
 
@@ -488,9 +448,7 @@ class HomeController extends Controller{
                     $recent_offers[$i]['favorite'] = false;
                 }
 
-                $price = $recent_offers[$i]['final_price'] * $currency['value'];
-                $priceBOffer = $recent_offers[$i]['price_before_offer'] * $currency['value'];
-
+                
                 $recent_offers[$i]['final_price'] = number_format((float)$price, 3, '.', '');
                 $recent_offers[$i]['price_before_offer'] = number_format((float)$priceBOffer, 3, '.', '');
             }
@@ -543,45 +501,7 @@ class HomeController extends Controller{
             $web_image =  ad::where('place',3)->inRandomOrder()->limit(1)->get();
             $favorites = Favorite::where('user_id', auth()->guard('user')->user()->id)->pluck('product_id')->toArray();
             $request->lang = 'ar';
-            $data = Product::whereIn('id', $favorites)->where('deleted', 0)->where('hidden', 0)->select('id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief')->orderBy('id','desc')->paginate(12);
-            $data->makeHidden('images');
-            if (count($data) > 0) {
-                for ($i = 0; $i < count($data); $i ++) {
-                    if ($data[$i]->main_image) {
-                        $data[$i]->main_image = $data[$i]->main_image->image;
-                    }else {
-                        if (count($data[$i]->images) > 0) {
-                            $data[$i]->main_image = $data[$i]->images[0]->image;
-                        }
-                    }
-                    $price = $data[$i]['final_price'] * $currency['value'];
-                    $priceBOffer = $data[$i]['price_before_offer'] * $currency['value'];
-
-                    $user = auth()->guard('user')->user();
-                    if($user){
-                        if (!empty($user->vip_id)) {
-                            $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $data[$i]['id'])->first();
-                            if ($productVip) {
-                                $priceOffer = $priceBOffer * ($productVip->percentage / 100);
-                                $price = $priceBOffer - $priceOffer;
-                                $data[$i]['offer'] = 1;
-                                $data[$i]['offer_percentage'] = $productVip->percentage;
-                            }
-                        }
-                        $favorite = Favorite::where('user_id' , $user->id)->where('product_id' , $data[$i]['id'])->first();
-                        if($favorite){
-                            $data[$i]['favorite'] = true;
-                        }else{
-                            $data[$i]['favorite'] = false;
-                        }
-                    }else{
-                        $data[$i]['favorite'] = false;
-                    }
-                    $data[$i]['final_price'] = number_format((float)$price, 3, '.', '');
-                    $data[$i]['price_before_offer'] = number_format((float)$priceBOffer, 3, '.', '');
-                }
-            }
-
+            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief'], $favorites, 'paginate', 12, ['images'], $currency['value'], $this->country->id, auth()->guard('user')->user());
 
             return view('front.favorite-ar', compact(['data', 'web_image', 'currency_data']));
         }
@@ -643,9 +563,13 @@ class HomeController extends Controller{
                 ->makeHidden('images');
                 $product['count'] = $cart[$i]['count'];
                 $price = $product['final_price'] * $product['count'] * $currency['value'];
-                
                 $priceBOffer = $product['price_before_offer'] * $currency['value'];
-                
+                $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $this->country->id)->first();
+                if ($productCountry) {
+                    $price = $productCountry->price;
+                    $priceBOffer = $price;
+                }
+
                 if ($product->main_image) {
                     $product->main_image = $product->main_image->image;
                 }else {
@@ -718,7 +642,7 @@ class HomeController extends Controller{
             $currency = $this->gSliderAdetCurrency($toCurr);
             $search = $request->product;
             $request->lang = 'ar';
-            
+            $dd = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief'], [], 'paginate', 12, ['images'], $currency['value'], $this->country->id, auth()->guard('user')->user(), $request->category);
             $data = Product::where('products.deleted', 0)
                 ->where('products.hidden', 0)
                 ->Where(function($query) use ($search) {
@@ -743,15 +667,18 @@ class HomeController extends Controller{
                     }
                     $price = $data[$i]['final_price'] * $currency['value'];
                     $priceBOffer = $data[$i]['price_before_offer'] * $currency['value'];
-    
+                    $productCountry = ProductCountry::where('product_id', $data[$i]->id)->where('country_id', $this->country->id)->first();
+                    if ($productCountry) {
+                        $price = $productCountry->price;
+                        $priceBOffer = $price;
+                    }
                     $user = auth()->guard('user')->user();
                     if($user){
                         if (!empty($user->vip_id)) {
                             $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $data[$i]['id'])->first();
                             if ($productVip) {
-                                $priceBOffer = $price;
-                                $priceOffer = $price * ($productVip->percentage / 100);
-                                $price = $price - $priceOffer;
+                                $priceOffer = $priceBOffer * ($productVip->percentage / 100);
+                                $price = $priceBOffer - $priceOffer;
                                 $data[$i]['offer'] = 1;
                                 $data[$i]['offer_percentage'] = $productVip->percentage;
                             }
@@ -812,18 +739,37 @@ class HomeController extends Controller{
         );
 
         $total = 0.000;
-
+        $webVisitor = $this->webVisitor;
+        $currency_data['currency'] = $this->currency;
+        $toCurr = $webVisitor->country->currency_en;
+        $currency = $this->gSliderAdetCurrency($toCurr);
+        
         if (count($cart) > 0) {
             for ($i = 0; $i < count($cart); $i ++) {
                 $product = Product::where('deleted', 0)->where('hidden', 0)->where('id', $cart[$i]->product_id)->first();
                 $price = $product['final_price'];
+                $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $this->country->id)->first();
+                if ($productCountry) {
+                    $price = $productCountry->price / $currency['value'];
+                    $product['price_before_offer'] = $price;
+                    if ($product['offer'] == 1) {
+                        $offerVal = $price * ($product['offer_percentage'] / 100);
+                        $price = $price - $offerVal;
+                    }
+                }
                 
                 if (!empty($user->vip_id)) {
                     $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $product['id'])->first();
                     if ($productVip) {
+                        if ($productCountry) {
+                            $price = $productCountry->price;
+                        }
                         $priceOffer = $product['price_before_offer'] * ($productVip->percentage / 100);
                         $price = ($product['price_before_offer']  * $cart[$i]['count']) - ($priceOffer  * $cart[$i]['count']);
+                    }else {
+                        $price = $product['price_before_offer']  * $cart[$i]['count'];
                     }
+                    // dd($price);
                 }else {
                     $price = $price * $cart[$i]['count'];
                 }
@@ -834,6 +780,7 @@ class HomeController extends Controller{
         
 
         $price = $total;
+        // dd($price);
         
         $request->payment_method = 1;
         $call_back_url = $root_url . "/payment/execute?payment_method=".$request->payment_method . "&email=" . $request->email . "&price=" . number_format((float)$price, 3, '.', '');
@@ -910,14 +857,31 @@ class HomeController extends Controller{
             'status' => 1
         ]);
         $cart = Cart::where('web_visitor_id', $visitor->id)->get();
+        $webVisitor = $this->webVisitor;
+        $currency_data['currency'] = $this->currency;
+        $toCurr = $webVisitor->country->currency_en;
+        $currency = $this->gSliderAdetCurrency($toCurr);
         if (count($cart) > 0) {
             for ($i = 0; $i < count($cart); $i++) {
                 $product = Product::where('deleted', 0)->where('hidden', 0)->where('id', $cart[$i]['product_id'])->first();
                 $price = $product['final_price'];
                 $priceBOffer = $product['price_before_offer'];
+                $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $this->country->id)->first();
+                if ($productCountry) {
+                    $price = $productCountry->price / $currency['value'];
+                    $priceBOffer = $price;
+                    if ($product['offer'] == 1) {
+                        $offerVal = $price * ($product['offer_percentage'] / 100);
+                        $price = $price - $offerVal;
+                    }
+                }
                 if (!empty($user->vip_id)) {
                     $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $product['id'])->first();
                     if ($productVip) {
+                        if ($productCountry) {
+                            $price = $productCountry->price;
+                            $priceBOffer = $price;
+                        }
                         $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                         $price = $priceBOffer - $priceOffer;
                         $product['offer_percentage'] = $productVip->percentage;
@@ -1175,5 +1139,172 @@ class HomeController extends Controller{
         
 
         return view('front.order-details-ar', compact('data', 'currency_data'));
+    }
+
+    // get products with select
+    public function getProductsWithSelect($select=[],
+    $whereIn=[],
+    $fetchType='paginate',
+    $paginateNumber=0,
+    $hidden=[],
+    $currencyValue,
+    $countryId,
+    $user,
+    $category_id=0,
+    $sub_category_id=0,
+    $sub_category_two_id=0,
+    $sub_category_three_id=0,
+    $sub_category_four_id=0,
+    $sub_category_five_id=0,
+    $id=0,
+    $search='') {
+        $data = Product::where('deleted', 0)->where('hidden', 0);
+
+        if (!empty($search)) {
+            $data = $data->Where(function($query) use ($search) {
+                $query->Where('products.title_en', 'like', '%' . $search . '%')->orWhere('products.title_ar', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($id != 0) {
+            $data = $data->where('id', $id);
+        }
+        if (count($whereIn) > 0) {
+            $data = $data->whereIn('id', $whereIn);
+        }
+        
+        if ($category_id != 0) {
+            $data = $data->where('category_id', $category_id);
+        }
+        if ($sub_category_id != 0) {
+            $data = $data->where('sub_category_id', $sub_category_id);
+        }
+        if ($sub_category_two_id != 0) {
+            $data = $data->where('sub_category_two_id', $sub_category_two_id);
+        }
+        if ($sub_category_three_id != 0) {
+            $data = $data->where('sub_category_three_id', $sub_category_three_id);
+        }
+        if ($sub_category_four_id != 0) {
+            $data = $data->where('sub_category_four_id', $sub_category_four_id);
+        }
+        if ($sub_category_five_id != 0) {
+            $data = $data->where('sub_category_five_id', $sub_category_five_id);
+        }
+
+        $data = $data->select($select)->orderBy('id','desc');
+        
+        if ($fetchType == 'paginate') {
+            $data = $data->paginate($paginateNumber);
+        }else if($fetchType == 'get') {
+            $data = $data->get();
+        }else {
+            $data = $data->first();
+        }
+        
+        $data->makeHidden($hidden);
+
+        if ($data) {
+            if (in_array($fetchType, ['paginate', 'get'])) {
+                $data->map(function ($row) use ($currencyValue, $countryId, $user) {
+                    if ($row->main_image) {
+                        $row->main_image = $row->main_image->image;
+                    }else {
+                        if (count($row->images) > 0) {
+                            $row->main_image = $row->images[0]->image;
+                        }
+                    }
+        
+                    $price = $row['final_price'] * $currencyValue;
+                    $priceBOffer = $row['price_before_offer'] * $currencyValue;
+                    $productCountry = ProductCountry::where('product_id', $row->id)->where('country_id', $countryId)->first();
+                    if ($productCountry) {
+                        $price = $productCountry->price;
+                        $priceBOffer = $price;
+                        if ($row['offer'] == 1) {
+                            $offerVal = $price * ($row['offer_percentage'] / 100);
+                            $price = $price - $offerVal;
+                        }
+                    }
+        
+                    if($user){
+                        if (!empty($user->vip_id)) {
+                            $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $row['id'])->first();
+                            if ($productVip) {
+                                if ($productCountry) {
+                                    $price = $productCountry->price;
+                                    $priceBOffer = $price;
+                                }
+                                $priceOffer = $priceBOffer * ($productVip->percentage / 100);
+                                $price = $priceBOffer - $priceOffer;
+                                $row['offer'] = 1;
+                                $row['offer_percentage'] = $productVip->percentage;
+                            }
+                        }
+                        $favorite = Favorite::where('user_id' , $user->id)->where('product_id' , $row['id'])->first();
+                        if($favorite){
+                            $row['favorite'] = true;
+                        }else{
+                            $row['favorite'] = false;
+                        }
+                    }else{
+                        $row['favorite'] = false;
+                    }
+                    $row['final_price'] = number_format((float)$price, 3, '.', '');
+                    $row['price_before_offer'] = number_format((float)$priceBOffer, 3, '.', '');
+        
+                    return $row;
+                });
+            }else {
+                if ($data->main_image) {
+                    $data->main_image = $data->main_image->image;
+                }else {
+                    if (count($data->images) > 0) {
+                        $data->main_image = $data->images[0]->image;
+                    }
+                }
+
+                $price = $data['final_price'] * $currencyValue;
+                $priceBOffer = $data['price_before_offer'] * $currencyValue;
+                $productCountry = ProductCountry::where('product_id', $data->id)->where('country_id', $countryId)->first();
+                if ($productCountry) {
+                    $price = $productCountry->price;
+                    $priceBOffer = $price;
+                    if ($data['offer'] == 1) {
+                        $offerVal = $price * ($data['offer_percentage'] / 100);
+                        $price = $price - $offerVal;
+                    }
+                }
+    
+                if($user){
+                    if (!empty($user->vip_id)) {
+                        $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $data['id'])->first();
+                        if ($productVip) {
+                            if ($productCountry) {
+                                $price = $productCountry->price;
+                                $priceBOffer = $price;
+                            }
+                            $priceOffer = $priceBOffer * ($productVip->percentage / 100);
+                            $price = $priceBOffer - $priceOffer;
+                            $data['offer'] = 1;
+                            $data['offer_percentage'] = $productVip->percentage;
+                        }
+                    }
+                    $favorite = Favorite::where('user_id' , $user->id)->where('product_id' , $data['id'])->first();
+                    if($favorite){
+                        $data['favorite'] = true;
+                    }else{
+                        $data['favorite'] = false;
+                    }
+                }else{
+                    $data['favorite'] = false;
+                }
+                $data['final_price'] = number_format((float)$price, 3, '.', '');
+                $data['price_before_offer'] = number_format((float)$priceBOffer, 3, '.', '');
+            }
+            
+        }
+        
+        return $data;
     }
 }
