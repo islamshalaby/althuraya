@@ -797,7 +797,7 @@ class HomeController extends Controller{
             "ErrorUrl" => $error_url,
             "Language" => "AR",
             "CustomerEmail" => $request->email,
-            "CustomerMobile" => substr($user->phone, 4),
+            // "CustomerMobile" => substr($user->phone, 4),
             "DisplayCurrencyIso" => "USD"
         );
         $payload =json_encode($fields);

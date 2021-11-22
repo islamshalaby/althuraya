@@ -138,7 +138,7 @@ class OrderController extends Controller
                 "ErrorUrl" => $error_url,
                 "Language" => "AR",
                 "CustomerEmail" => $user->email,
-                "CustomerMobile" => substr($user->phone, 4),
+                // "CustomerMobile" => substr($user->phone, 4),
                 "DisplayCurrencyIso" => "USD"
             ); 
 
@@ -525,7 +525,7 @@ class OrderController extends Controller
                 "ErrorUrl" => $error_url,
                 "Language" => "AR",
                 "CustomerEmail" => $user->email,
-                "CustomerMobile" => substr($user->phone, 4),
+                // "CustomerMobile" => substr($user->phone, 4),
                 "DisplayCurrencyIso" => "USD"
             ); 
 
