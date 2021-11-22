@@ -503,7 +503,7 @@ class OrderController extends Controller
                 }
             }
             
-            $root_url = 'http://127.0.0.1:8000';
+            $root_url = $request->root();
             $user = auth()->user();
             
             $path='https://apitest.myfatoorah.com/v2/SendPayment';
