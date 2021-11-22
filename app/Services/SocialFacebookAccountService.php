@@ -10,9 +10,12 @@ class SocialFacebookAccountService
     public function createOrGetUser(ProviderUser $providerUser)
     {
         $account = User::where('facebook_id', $providerUser->getId())
+        ->orWhere('email', $providerUser->getEmail())
             ->first();
         if ($account) {
-            return $account->user;
+            $account->facebook_id = $providerUser->getId();
+            $account->save();
+            return $account;
         } else {
 
             $account = new SocialFacebookAccount([
@@ -20,17 +23,12 @@ class SocialFacebookAccountService
                 'provider' => 'facebook'
             ]);
 
-            $user = User::whereEmail($providerUser->getEmail())->first();
-
-            if (!$user) {
-
-                $user = User::create([
-                    'email' => $providerUser->getEmail(),
-                    'name' => $providerUser->getName(),
-                    'facebook_id' => $providerUser->getId(),
-                    'password' => md5(rand(1,10000)),
-                ]);
-            }
+            $user = User::create([
+                'email' => $providerUser->getEmail(),
+                'name' => $providerUser->getName(),
+                'facebook_id' => $providerUser->getId(),
+                'password' => md5(rand(1,10000)),
+            ]);
 
             $account->user()->associate($user);
             $account->save();
