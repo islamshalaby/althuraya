@@ -879,7 +879,7 @@ class HomeController extends Controller{
                     $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $product['id'])->first();
                     if ($productVip) {
                         if ($productCountry) {
-                            $price = $productCountry->price;
+                            $price = $productCountry->price / $currency['value'];
                             $priceBOffer = $price;
                         }
                         $priceOffer = $priceBOffer * ($productVip->percentage / 100);
