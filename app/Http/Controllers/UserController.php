@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Helpers\APIHelpers;
 use App\UserNotification;
 use App\Notification;
+use App\Setting;
 use App\Visitor;
 use Cloudinary;
 
@@ -49,6 +50,8 @@ class UserController extends Controller
             $returned_user['currency'] = $country->currency;
             $returned_user['country'] = $country->icon;
         }
+        $whats = Setting::select('app_phone')->find(1);
+        $returned_user['whats_app'] = $whats->app_phone;
         
         
 
