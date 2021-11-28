@@ -52,7 +52,7 @@ class ProductController extends Controller
                     $currency = Currency::create(['value' => $result['value'], "from" => "usd", "to" => $toCurr]);
                 }
             }
-            $data = Product::where('id', $id)->select('id', 'title_' . $request->lang . ' as title', 'offer', 'description_' . $request->lang . ' as description', 'final_price', 'price_before_offer', 'offer_percentage', 'category_id')->first()->makeHidden('category');
+            $data = Product::where('id', $id)->select('id', 'title_' . $request->lang . ' as title', 'offer', 'description_' . $request->lang . ' as description', 'final_price', 'price_before_offer', 'offer_percentage', 'category_id', 'remaining_quantity')->first()->makeHidden('category');
             
             if ($request->lang == 'en') {
                 $data['category_name'] = $data->category->title_en;

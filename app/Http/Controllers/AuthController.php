@@ -71,6 +71,9 @@ class AuthController extends Controller
                 if ($request->fcm_token) {
                     $fcm = $request->fcm_token;
                 }
+                if ($request->email) {
+                    $email = $request->email;
+                }
                 $user = User::create([
                     'name' => $name,
                     'email' => $email,
@@ -108,6 +111,9 @@ class AuthController extends Controller
                 $fcm = '';
                 if ($request->fcm_token) {
                     $fcm = $request->fcm_token;
+                }
+                if ($request->email) {
+                    $email = $request->email;
                 }
                 $user = User::create([
                     'name' => $name,

@@ -12,6 +12,7 @@ use App\Helpers\APIHelpers;
 use App\UserNotification;
 use App\Notification;
 use App\Visitor;
+use Cloudinary;
 
 
 class UserController extends Controller
@@ -84,10 +85,10 @@ class UserController extends Controller
             $image = $request->image;  // your base64 encoded
             $image = 'data:image/png;base64,' . $image;
             // dd($image);
-            Cloudder::upload($image, null);
-            $front_imageereturned = Cloudder::getResult();
-            $front_image_id = $front_imageereturned['public_id'];
-            $front_image_format = $front_imageereturned['format'];    
+            // Cloudder::upload($image, null);
+            $front_imageereturned = Cloudinary::upload($image);
+            $front_image_id = $front_imageereturned->getPublicId();
+            $front_image_format = $front_imageereturned->getExtension();  
             $front_image_new_name = $front_image_id.'.'.$front_image_format;
             $profileImage = $front_image_new_name;
         }

@@ -23,9 +23,27 @@ class HomeController extends Controller
 
     // get home sliders
     public function getSlider(Request $request) {
-        $ads = $this->getSlidersTypes($request);
+        
+        if ($request->type == 'bottom') {
+            $request->api = 'test';
+            $ads = $this->getSlidersTypes($request);
+            if ($ads[0]) {
+                $data = $ads[0];
+            }else {
+                $data = (object)[
+                    'id' => 0,
+                    'image' => '',
+                    'type' => 1,
+                    'content' => ''
+                ];
+            }
+        }else {
+            $data = $this->getSlidersTypes($request);
+        }
+        
+        
 
-        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $ads , $request->lang);
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , $request->lang);
         return response()->json($response , 200);
     }
 

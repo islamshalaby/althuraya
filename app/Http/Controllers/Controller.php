@@ -257,7 +257,7 @@ class Controller extends BaseController
                                 $hasProducts = true;
                             }
                         }
-
+                        
                         if ($hasProducts) {
                             $cat->next_level = true;
                             $cat->url = $url['sub_cat'];
@@ -294,12 +294,18 @@ class Controller extends BaseController
     // get sliders
     public function getSlidersTypes($request)
     {
-        $ids = SliderAd::where('slider_id', 5)->pluck('ad_id')->toArray();
-        if ($request->type == 'top') {
-            $ids = SliderAd::where('slider_id', 3)->pluck('ad_id')->toArray();
+        if ($request->api) {
+            $ads = Ad::where('place', 4)->select('id', 'image', 'type', 'content')->inRandomOrder()->limit(1)->get();
+        }else {
+            if ($request->type == 'top') {
+                $ids = SliderAd::where('slider_id', 3)->pluck('ad_id')->toArray();
+            }else {
+                $ids = SliderAd::where('slider_id', 5)->pluck('ad_id')->toArray();
+            }
+            $ads = Ad::whereIn('id', $ids)->select('id', 'image', 'type', 'content')->get();
         }
+        
 
-        $ads = Ad::whereIn('id', $ids)->select('id', 'image', 'type', 'content')->get();
 
         return $ads;
     }
