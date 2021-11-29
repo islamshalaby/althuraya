@@ -518,7 +518,7 @@ class OrderController extends Controller
 
             $error_url = $root_url."/api/pay/error";
             $fields =array(
-                "CustomerName" => $user->name,
+                "CustomerName" => $user->email,
                 "NotificationOption" => "LNK",
                 "InvoiceValue" => $price,
                 "CallBackUrl" => $call_back_url,

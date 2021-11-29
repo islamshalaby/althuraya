@@ -85,8 +85,9 @@ class AuthController extends Controller
             }else {
                 if ($request->email) {
                     $user->email = $request->email;
+                    $user->save();
                 }
-                $user->save();
+                
                 auth()->login($user);
             }
         }else {
@@ -130,8 +131,9 @@ class AuthController extends Controller
             }else {
                 if ($request->email) {
                     $user->email = $request->email;
+                    $user->save();
                 }
-                $user->save();
+                
                 auth()->login($user);
             }
         }
