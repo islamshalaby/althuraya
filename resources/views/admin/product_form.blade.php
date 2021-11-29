@@ -1010,10 +1010,10 @@
                         <section>
                             
                             <div id="single-details">
-                                <div class="form-group mb-4">
+                                {{-- <div class="form-group mb-4">
                                     <label for="purchasing_price">{{ __('messages.purchasing_price') }} *</label>
                                     <input required type="number" step="any" ref="purchasing" min="0" name="purchasing_price" class="form-control" id="purchasing_price" placeholder="{{ __('messages.purchasing_price') }}" v-model="source" >
-                                </div>
+                                </div> --}}
                                 <div class="form-group mb-4">
                                     <label for="price_before_offer">{{ __('messages.usd_price') }} *</label>
                                     <input required type="number" step="any" ref="selling" min="0" name="price_before_offer" class="form-control" id="price_before_offer" placeholder="{{ __('messages.product_price') }}" v-model="sePrice" value="{{ old('price_before_offer') }}" >
