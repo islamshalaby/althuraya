@@ -39,7 +39,9 @@
                                 <td>{{ $category->title }}</td>
                                 
                                 <td class="text-center blue-color">
-                                    
+                                    @if (count($category->products) > 0 && $category->next_level == false)
+                                        {{ __('messages.category_has_products_add') }}
+                                    @else
                                     <a href="{{route('sub_cat.show',$category->id)}}">
                                         <div class="">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -51,7 +53,7 @@
                                             </svg>
                                         </div>
                                     </a>
-                                    
+                                    @endif
                                 </td>
                                 
                                 

@@ -38,7 +38,9 @@
                                 <td class="text-center"><img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/w_100,q_100/v1581928924/{{ $row->image }}"  /></td>
                                 <td class="text-center blue-color">{{ $row->title }}</td>
                                 <td class="text-center blue-color">
-                                    
+                                    @if (count($row->products) > 0 && $row->next_level == false)
+                                        {{ __('messages.category_has_products_add') }}
+                                    @else
                                     <a href="{{route('sub_three_cat.show',$row->id)}}">
                                         <div class="">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -50,7 +52,7 @@
                                             </svg>
                                         </div>
                                     </a>
-                                    
+                                    @endif
                                 </td>
                                 @if(Auth::user()->update_data)
                                     <td class="text-center blue-color" ><a href="{{ route( 'sub_two_cat.edit', $row->id ) }}" ><i class="far fa-edit"></i></a></td>
