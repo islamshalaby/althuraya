@@ -39,15 +39,15 @@ class UpdateSerials extends Command
      */
     public function handle()
     {
-        Product::where('deleted', 0)->where('hidden', 0)->get()
-        ->map(function ($row) {
-            // get valid - all serials count
-            $path2='http://athath-ads.tk/api/serials/count/' . $row->id;
-            $count = APIHelpers::fetchApi($path2, [], 'json', 'get');
+        // Product::where('deleted', 0)->where('hidden', 0)->get()
+        // ->map(function ($row) {
+        //     // get valid - all serials count
+        //     $path2='http://athath-ads.tk/api/serials/count/' . $row->id;
+        //     $count = APIHelpers::fetchApi($path2, [], 'json', 'get');
             
-            if ($count && $count->success) {
-                $row->update(['remaining_quantity' => $count->data->count_valid_serials, 'total_quatity' => $count->data->count_all_serials]);
-            }
-        });
+        //     if ($count && $count->success) {
+        //         $row->update(['remaining_quantity' => $count->data->count_valid_serials, 'total_quatity' => $count->data->count_all_serials]);
+        //     }
+        // });
     }
 }
