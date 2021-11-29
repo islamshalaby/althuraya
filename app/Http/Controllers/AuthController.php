@@ -83,6 +83,10 @@ class AuthController extends Controller
                 ]);
                 auth()->login($user);
             }else {
+                if ($request->email) {
+                    $user->email = $request->email;
+                }
+                $user->save();
                 auth()->login($user);
             }
         }else {
@@ -124,6 +128,10 @@ class AuthController extends Controller
                 ]);
                 auth()->login($user);
             }else {
+                if ($request->email) {
+                    $user->email = $request->email;
+                }
+                $user->save();
                 auth()->login($user);
             }
         }
