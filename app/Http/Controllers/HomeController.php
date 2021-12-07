@@ -80,7 +80,7 @@ class HomeController extends Controller
                 }
             }
 
-            $data = $this->getOffersTypes($request);
+            $data = $this->getOffersTypes($request, 0, 10);
     
             for ($i = 0; $i < count($data); $i ++) {
                 if ($data[$i]->main_image) {

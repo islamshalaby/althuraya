@@ -273,19 +273,19 @@ class Controller extends BaseController
     }
 
     // get offers
-    public function getOffersTypes($request, $not=0)
+    public function getOffersTypes($request, $not=0, $number=5)
     {
         if ($request->type == 'recent') {
             $offers = Product::where('deleted', 0)->where('hidden', 0)->where('recent_offers', 1);
             if ($not != 0) {
                 $offers = $offers->where('id', '!=', $not);
             }
-            $offers = $offers->select('id', 'title_' . $request->lang . ' as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief')->inRandomOrder()->limit(5)->get()->makeHidden('images');
+            $offers = $offers->select('id', 'title_' . $request->lang . ' as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief')->orderBy('id', 'desc')->limit($number)->get()->makeHidden('images');
         } elseif ($request->type == 'all') {
             $offers = Product::where('deleted', 0)->where('hidden', 0)->select('id', 'title_' . $request->lang . ' as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief')->paginate(12);
             $offers->makeHidden('images');
         } else {
-            $offers = Product::where('deleted', 0)->where('hidden', 0)->where('choose_for_you', 1)->select('id', 'title_' . $request->lang . ' as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief')->inRandomOrder()->limit(5)->get()->makeHidden('images');
+            $offers = Product::where('deleted', 0)->where('hidden', 0)->where('choose_for_you', 1)->select('id', 'title_' . $request->lang . ' as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief')->orderBy('id', 'desc')->limit($number)->get()->makeHidden('images');
         }
 
         return $offers;
