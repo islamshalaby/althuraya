@@ -134,9 +134,9 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                     
                     @php
                         $queryArray = [];
-                        if(isset($data['from']) && isset($data['to'])) {
-                            $queryArray['from'] = $data['from'];
-                            $queryArray['to'] = $data['to'];
+                        if(Request::get('from') && Request::get('to')) {
+                            $queryArray['from'] = Request::get('from');
+                            $queryArray['to'] = Request::get('to');
                         }
                         
                     @endphp

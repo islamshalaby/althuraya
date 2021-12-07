@@ -317,7 +317,7 @@ class WebViewController extends Controller
             if(isset($request->from) && isset($request->to)){
                 $data['from'] = $request->from;
                 $data['to'] = $request->to;
-                $data['orders'] = $data['orders']->whereBetween('main_orders.created_at', array($request->from, $request->to));
+                $data['orders'] = $data['orders']->whereBetween('created_at', array($request->from, $request->to));
             }
         
 
