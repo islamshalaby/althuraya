@@ -112,7 +112,7 @@ class ProductController extends Controller
                 ->where('remaining_quantity', '>', 0)
                 ->where('id', '!=', $data['id'])
                 ->where('category_id', $data['category_id'])
-                ->select('id', 'title_' . $request->lang . ' as title', 'final_price', 'price_before_offer', 'offer_percentage')
+                ->select('id', 'title_' . $request->lang . ' as title', 'final_price', 'price_before_offer', 'offer_percentage', 'offer')
                 ->orderBy('id', 'desc')
                 ->inRandomOrder()->limit(5)
                 ->get()->makeHidden('mainImage');
