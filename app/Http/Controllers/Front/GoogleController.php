@@ -55,7 +55,7 @@ class GoogleController extends Controller
                 return redirect()->route('front.home');
             }
         } catch (Exception $e) {
-            dd('here2');
+            // dd('here2');
             dd($e->getMessage());
         }
     }
