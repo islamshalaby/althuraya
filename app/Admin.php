@@ -29,6 +29,7 @@ class Admin extends  Authenticatable
         $data['seller_count'] = Seller::where('seen' , 0)->count();
         $data['user_count'] = User::where('seen' , 0)->count();
         $data['refund_count'] = Retrieve::where('admin_seen' , 0)->count();
+        $data['ended_products_count'] = Product::where('deleted', 0)->where('remaining_quantity' , 0)->count();
         $data['setting'] = Setting::where('id' ,1)->select('app_name_en' , 'app_name_ar' , 'logo')->first();
         return $data;
     }

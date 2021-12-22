@@ -115,6 +115,11 @@ class ProductController extends AdminController{
             $data['products'] = $data['products']->where('remaining_quantity' , '<' , 10);
             $data['expire'] = 'soon';
         }
+        
+        if(isset($request->empty) && $request->empty == 0){
+            $data['products'] = $data['products']->where('remaining_quantity' , 0);
+            // $data['expire'] = 'soon';
+        }
         if($request->category){
             $data['products'] = $data['products']->where('category_id' , $request->category);
         }
@@ -123,18 +128,21 @@ class ProductController extends AdminController{
         }
         $data['products'] = $data['products']->orderBy('id' , 'desc')->get();
 
-        for ($i =0; $i < count($data['products']); $i ++) {
-            $path='http://athath-ads.tk/api/serials/valid';
-            $fields =array(
-                'product_id' => $data['products'][$i]->id
-            );
-            $result = APIHelpers::fetchApi($path, $fields, 'json', 'post');
-			$data['products'][$i]['serials'] = [];
-			if ($result) {
-			$data['products'][$i]['serials'] = $result->data;
-			}
-            
+        if (count($data['products']) > 0) {
+            for ($i =0; $i < count($data['products']); $i ++) {
+                $path='http://athath-ads.tk/api/serials/valid';
+                $fields =array(
+                    'product_id' => $data['products'][$i]->id
+                );
+                $result = APIHelpers::fetchApi($path, $fields, 'json', 'post');
+                $data['products'][$i]['serials'] = [];
+                if ($result) {
+                $data['products'][$i]['serials'] = $result->data;
+                }
+                
+            }
         }
+        
         
         $data['encoded_products'] = json_encode($data['products']);
         return view('admin.products', ['data' => $data]);

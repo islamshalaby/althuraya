@@ -662,6 +662,7 @@
             "warnings" => "تنبيهات الشراء",
             "failed_to_create_order" => "فشل فى إنشاء طلب من خادم لايك كارد",
             "marked_as_read" => "تم التحديد كمقروء",
-            "purchasing_price" => "سعر الشراء"
+            "purchasing_price" => "سعر الشراء",
+            "empty_products" => "المنتجات المنتهية كميتها"
         ];
 ?>
