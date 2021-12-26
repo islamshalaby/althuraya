@@ -153,16 +153,16 @@
                                 <td>{{ $product->sold_count }}</td>
                                 <td>
                                     @if($product->multi_options == 0)
-                                    {{ $product->offer == 1 ? $product->price_before_offer . " " . __('messages.dinar') : $product->final_price . " " . __('messages.dinar') }}
+                                    {{ $product->offer == 1 ? $product->price_before_offer . " " . __('messages.usd') : $product->final_price . " " . __('messages.usd') }}
                                     @else
-                                    {{ $product->offer == 1 ? __('messages.start_from') . $product->multiOptions[0]->price_before_offer . " " . __('messages.dinar') : __('messages.start_from') . $product->multiOptions[0]->final_price . " " . __('messages.dinar') }}
+                                    {{ $product->offer == 1 ? __('messages.start_from') . $product->multiOptions[0]->price_before_offer . " " . __('messages.usd') : __('messages.start_from') . $product->multiOptions[0]->final_price . " " . __('messages.usd') }}
                                     @endif
                                 </td>
                                 <td>
                                     @if($product->multi_options == 0)
-                                    {{ $product->final_price . " " . __('messages.dinar') }}
+                                    {{ $product->final_price . " " . __('messages.usd') }}
                                     @else
-                                    {{ __('messages.start_from') . $product->multiOptions[0]->final_price . " " . __('messages.dinar') }}
+                                    {{ __('messages.start_from') . $product->multiOptions[0]->final_price . " " . __('messages.usd') }}
                                     @endif
                                 </td>
                                 <td>{{ $product->updated_at->format("d-m-y") }}</td>

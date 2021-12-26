@@ -47,7 +47,7 @@ class VisitorController extends Controller
             $visitor = new Visitor();
             $visitor->unique_id = $request->unique_id;
             if ($request->fcm_token) {
-                $last_visitor->fcm_token = $request->fcm_token;
+                $visitor->fcm_token = $request->fcm_token;
             }
             $visitor->type = $request->type;
             $visitor->country_code = strtoupper($request->country_code);
