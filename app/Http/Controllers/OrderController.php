@@ -431,7 +431,7 @@ class OrderController extends Controller
              });
             
             
-            return redirect('api/pay/success');
+            return redirect('api/pay/success?order_id=' . $order->id);
         }else {
             $response = APIHelpers::createApiResponse(true , 406 , 'Visitor is not exist or code country is empty' , 'Visitor is not exist or code country is empty' , null , $request->lang);
             return response()->json($response , 406);
@@ -790,7 +790,7 @@ class OrderController extends Controller
             $message->from('modaapp9@gmail.com','Al thuraya');
         });
 
-        return redirect('api/pay/success'); 
+        return redirect('api/pay/success?order_id=' . $order->id); 
     }
 
     public function getorders(Request $request){
