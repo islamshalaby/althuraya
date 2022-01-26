@@ -222,6 +222,9 @@ class LikeCardController extends AdminController{
         //dd($balance);
         if (($balance && $balance->balance > $request->like_product_price) || $request->product_id == 376) {
             $orderSuccess = false;
+			if ($request->amount == 0) {
+                $orderSuccess = true;
+            }
             for ($i = 0; $i < $request->amount; $i ++) {
                 $curl = curl_init();
 

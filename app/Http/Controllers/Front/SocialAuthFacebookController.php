@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Services\SocialFacebookAccountService;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Socialite;
 
 class SocialAuthFacebookController extends Controller
@@ -18,10 +19,15 @@ class SocialAuthFacebookController extends Controller
      *
      * @return callback URL from facebook
      */
-    public function callback(SocialFacebookAccountService $service)
+    public function callback(SocialFacebookAccountService $service, Request $request)
     {
-        $user = $service->createOrGetUser(Socialite::driver('facebook')->user());
-        auth()->guard('user')->login($user);
-        return redirect()->route('front.home');
+		if(!$request->has('code') || $request->has('denied')) {
+			return redirect()->route('front.home');
+		}else {
+			$user = $service->createOrGetUser(Socialite::driver('facebook')->user());
+			auth()->guard('user')->login($user);
+			
+			return redirect()->route('front.home');
+		}
     }
 }

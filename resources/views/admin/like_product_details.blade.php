@@ -1004,7 +1004,7 @@
                             
                             <div id="single-details">
                                 <div class="form-group mb-4">
-                                    <label for="price_before_offer">{{ __('messages.product_price') }} {{ __('messages.dinar') }} *</label>
+                                    <label for="price_before_offer">{{ __('messages.usd_price') }} *</label>
                                     <input required type="number" step="any" min="0" name="price_before_offer" class="form-control" id="price_before_offer" placeholder="{{ __('messages.product_price') }}" value="" >
                                 </div>
                                 <div class="form-group">

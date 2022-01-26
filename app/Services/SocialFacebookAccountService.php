@@ -12,6 +12,7 @@ class SocialFacebookAccountService
         $account = User::where('facebook_id', $providerUser->getId())
         ->orWhere('email', $providerUser->getEmail())
             ->first();
+		
         if ($account) {
             $account->facebook_id = $providerUser->getId();
             $account->save();

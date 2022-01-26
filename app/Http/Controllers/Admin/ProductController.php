@@ -597,7 +597,7 @@ class ProductController extends AdminController{
             $product_post['sub_category_five_id'] = $request->sub_category_id5;
         }
         $product_post['reviewed'] = 1;
-        $product_post['hidden'] = 1;
+        // $product_post['hidden'] = 1;
         $createdProduct = Product::create($product_post);
 
         if ( $request->vip_id && count($request->vip_id) > 0 && $request->vip_percentage) {
