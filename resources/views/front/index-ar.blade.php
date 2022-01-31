@@ -122,7 +122,7 @@
                                     <a href="{{ route('front.login') }}" class="favorite-pr {{ $item->favorite == true ? 'Active' : '' }}"><i></i></a>
                                     @endif
 
-                                    <img class="{{ $item->remaining_quantity == 0 ? 'blur' : '' }}" src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/h_292,q_100/v1581928924/{{ $item->main_image }}">
+                                    <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/q_100/v1581928924/{{ $item->main_image }}">
                                     <div class="outdated {{ $item->remaining_quantity == 0 ? 'show' : '' }}">
                                         غير متوفر فى المخزون
                                     </div>
@@ -225,7 +225,7 @@
                                     @else
                                     <a href="{{ route('front.login') }}" class="favorite-pr {{ $offer->favorite == true ? 'Active' : '' }}"><i></i></a>
                                     @endif
-                                    <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/h_292,q_100/v1581928924/{{ $offer->main_image }}">
+                                    <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/q_100/v1581928924/{{ $offer->main_image }}">
                                     <div class="outdated {{ $offer->remaining_quantity == 0 ? 'show' : '' }}">
                                         غير متوفر فى المخزون
                                     </div>
