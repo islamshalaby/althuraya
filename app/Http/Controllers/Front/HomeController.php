@@ -49,7 +49,7 @@ class HomeController extends Controller{
             $request->lang = 'ar';
             $data['categories'] = $this->getCats($request, 'web');
             $request->type = 'recent';
-            $data['recent_offers'] = $this->getOffersTypes($request);
+            $data['recent_offers'] = $this->getOffersTypes($request, 0, 5);
             for ($i = 0; $i < count($data['recent_offers']); $i ++) {
                 if ($data['recent_offers'][$i]->main_image) {
                     $data['recent_offers'][$i]->main_image = $data[$i]->main_image->image;
@@ -103,7 +103,7 @@ class HomeController extends Controller{
                 $data['recent_offers'][$i]['price_before_offer'] = number_format((float)$priceBOffer, 3, '.', '');
                 
             }
-            $data['recent_product'] = Product::where('deleted', 0)->where('hidden', 0)->select('id', 'title_' . $request->lang . ' as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'created_at', 'brief_' . $request->lang . ' as brief')->orderBy('created_at', 'desc')->limit(5)->get()->makeHidden('images');
+            $data['recent_product'] = Product::where('deleted', 0)->where('hidden', 0)->select('id', 'title_' . $request->lang . ' as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'created_at', 'brief_' . $request->lang . ' as brief', 'remaining_quantity')->orderBy('created_at', 'desc')->limit(5)->get()->makeHidden('images');
             for ($i = 0; $i < count($data['recent_product']); $i ++) {
                 if ($data['recent_product'][$i]->main_image) {
                     $data['recent_product'][$i]->main_image = $data['recent_product'][$i]->main_image->image;
@@ -237,7 +237,7 @@ class HomeController extends Controller{
             $toCurr = $webVisitor->country->currency_en;
             $currency = $this->gSliderAdetCurrency($toCurr);
             $request->lang = 'ar';
-            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief'], [], 'paginate', 12, ['images'], $currency['value'], $this->country->id, auth()->guard('user')->user(), $request->category_id, $request->sub_category_id, $request->sub_category_two_id, $request->sub_category_three_id, $request->sub_category_four_id, $request->sub_category_five_id);
+            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief', 'remaining_quantity'], [], 'paginate', 12, ['images'], $currency['value'], $this->country->id, auth()->guard('user')->user(), $request->category_id, $request->sub_category_id, $request->sub_category_two_id, $request->sub_category_three_id, $request->sub_category_four_id, $request->sub_category_five_id);
 
             return view('front.products-list-ar',compact('data','currency_data','web_image'));
         }else {
@@ -273,6 +273,7 @@ class HomeController extends Controller{
         $toCurr = $webVisitor->country->currency_en;
         $currency = $this->gSliderAdetCurrency($toCurr);
         $data['recent_offers'] = $this->getOffersTypes($request);
+        // dd($data['recent_offers']);
         for ($i = 0; $i < count($data['recent_offers']); $i ++) {
             if ($data['recent_offers'][$i]->main_image) {
                 $data['recent_offers'][$i]->main_image = $data[$i]->main_image->image;
@@ -394,10 +395,10 @@ class HomeController extends Controller{
             $toCurr = $webVisitor->country->currency_en;
             $currency = $this->gSliderAdetCurrency($toCurr);
 
-            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'description_ar as description', 'final_price', 'price_before_offer', 'offer_percentage', 'category_id'], [], 'first', 0, ['category'], $currency['value'], $this->country->id, auth()->guard('user')->user(), 0, 0, 0, 0, 0, 0, $id);
+            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'description_ar as description', 'web_description_ar as web_description', 'final_price', 'price_before_offer', 'offer_percentage', 'category_id', 'sub_category_id', 'sub_category_two_id', 'sub_category_three_id', 'sub_category_four_id', 'sub_category_five_id'], [], 'first', 0, ['category'], $currency['value'], $this->country->id, auth()->guard('user')->user(), 0, 0, 0, 0, 0, 0, $id);
 
             $request->type = 'recent';
-            $recent_offers = $this->getOffersTypes($request, $data['id']);
+            $recent_offers = $this->getOffersTypes($request, 0, 5);
 
             for ($i = 0; $i < count($recent_offers); $i ++) {
                 if ($recent_offers[$i]->main_image) {
@@ -501,7 +502,7 @@ class HomeController extends Controller{
             $web_image =  ad::where('place',3)->inRandomOrder()->limit(1)->get();
             $favorites = Favorite::where('user_id', auth()->guard('user')->user()->id)->pluck('product_id')->toArray();
             $request->lang = 'ar';
-            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief'], $favorites, 'paginate', 12, ['images'], $currency['value'], $this->country->id, auth()->guard('user')->user());
+            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief', 'remaining_quantity'], $favorites, 'paginate', 12, ['images'], $currency['value'], $this->country->id, auth()->guard('user')->user());
 
             return view('front.favorite-ar', compact(['data', 'web_image', 'currency_data']));
         }

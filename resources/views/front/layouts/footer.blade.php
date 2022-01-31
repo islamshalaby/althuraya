@@ -135,6 +135,48 @@
             $(this).parent('.input-group-btn').parent('.input-group').parent('form').submit()
         })
     </script>
+    <style>
+        .chatbot {
+            position: fixed;
+            z-index: 99999999;
+            font-family: DroidKufi !important;
+        }
+
+        /* style-4  - chip style - added modified .. since v1.6+ silent release  */
+        .ccw_plugin .style-4.chip {
+            display: inline-block;
+            padding-left: 12px;
+            padding-right: 12px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            border-radius: 25px;
+            font-size: 16px;
+            line-height: 44px;
+            width: 100%;
+        }
+
+            /* Image */
+            .ccw_plugin .style-4.chip img {
+                float: left;
+                margin: 0 0px 0 -10px;
+                height: 42px;
+                width: 42px;
+                border-radius: 50%;
+            }
+    </style>
+    <div class="ccw_plugin chatbot" style="bottom:10px; left:10px;">
+        <!-- style 4   chip - logo+text -->
+        <div class="style4 animated no-animation ccw-no-hover-an">
+            <a class="whatsapplink" target="_blank" href="https://api.whatsapp.com/send?phone={{ $settings->phone }}&text=السلام عليكم ورحمة الله وبركاته" class="nofocus">
+                <div class="chip style-4 ccw-analytics" id="style-4" data-ccw="style-4" style="background-color: #e4e4e4; color: rgba(0, 0, 0, 0.6)">
+                    <img src="/front/assets/img/whatsapp.png" class="ccw-analytics" id="s4-icon" data-ccw="style-4" alt="WhatsApp">
+                    تواصل واتساب الآن... اضغط هنا
+                </div>
+            </a>
+        </div>
+    </div>
+
+
     @stack('scripts')
     @include('sweetalert::alert')
 </body>

@@ -17,6 +17,8 @@ class Product extends Model
         'brief_ar',
         'description_ar', 
         'description_en', 
+        'web_description_en',
+        'web_description_ar',
         'purchasing_price',
         'final_price', 
         'price_before_offer',

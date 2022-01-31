@@ -32,6 +32,9 @@
                                     <a href="{{ route('front.login') }}" class="favorite-pr {{ $row->favorite == true ? 'Active' : '' }}"><i></i></a>
                                     @endif
                                     <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/w_245,h_245,q_100/v1581928924/{{ $row->main_image }}">
+                                    <div class="outdated {{ $row->remaining_quantity == 0 ? 'show' : '' }}">
+                                        غير متوفر فى المخزون
+                                    </div>
                                     <div class="mask ">
                                         <div class="actionBut">
                                             <form action="{{ route('front.add.cart.put') }}" method="post">

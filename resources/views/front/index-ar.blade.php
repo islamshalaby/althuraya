@@ -110,7 +110,7 @@
                         <div class="carousel-item-b swiper-slide">
                             <div class="card productList">
                                 
-                                <div class="view view-sixth card-img-top">
+                                <div class=" view view-sixth card-img-top">
                                     @if (Auth::guard('user')->user())
                                     <form action="{{ route('front.like.product.put') }}" method="post">
                                         @csrf
@@ -122,7 +122,10 @@
                                     <a href="{{ route('front.login') }}" class="favorite-pr {{ $item->favorite == true ? 'Active' : '' }}"><i></i></a>
                                     @endif
 
-                                    <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/w_245,h_245,q_100/v1581928924/{{ $item->main_image }}">
+                                    <img class="{{ $item->remaining_quantity == 0 ? 'blur' : '' }}" src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/h_292,q_100/v1581928924/{{ $item->main_image }}">
+                                    <div class="outdated {{ $item->remaining_quantity == 0 ? 'show' : '' }}">
+                                        غير متوفر فى المخزون
+                                    </div>
                                     <div class="mask ">
                                         <div class="actionBut">
                                             <form action="{{ route('front.add.cart.put') }}" method="post">
@@ -222,7 +225,10 @@
                                     @else
                                     <a href="{{ route('front.login') }}" class="favorite-pr {{ $offer->favorite == true ? 'Active' : '' }}"><i></i></a>
                                     @endif
-                                    <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/w_245,h_245,q_100/v1581928924/{{ $offer->main_image }}">
+                                    <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/h_292,q_100/v1581928924/{{ $offer->main_image }}">
+                                    <div class="outdated {{ $offer->remaining_quantity == 0 ? 'show' : '' }}">
+                                        غير متوفر فى المخزون
+                                    </div>
                                     <div class="mask ">
                                         <div class="actionBut">
                                             <form action="{{ route('front.add.cart.put') }}" method="post">

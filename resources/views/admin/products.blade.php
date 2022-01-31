@@ -144,7 +144,7 @@
                         @foreach ($data['products'] as $product)
                             <tr>
                                 <td><?=$i;?></td>
-                                <td class="hide_col"><img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/w_50,q_50/v1623672910/{{ isset($product->mainImage->image) ? $product->mainImage->image : '' }}"  /></td>
+                                <td class="hide_col"><img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/w_50,q_50/v1623672910/{{ isset($product->mainImage->image) ? $product->mainImage->image : $product->images[0]->image }}"  /></td>
                                 <td>{{ App::isLocale('en') ? $product->title_en : $product->title_ar }}</td>
                                 <td>{{ $product->like_card == 1 ? __('messages.like_card') : __('messages.normal_product') }}</td>
                                 <td>{{ App::isLocale('en') ?  $product->category->title_en : $product->category->title_ar }}</td>

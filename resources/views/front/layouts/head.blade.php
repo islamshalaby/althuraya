@@ -58,6 +58,6 @@
             width : 100%
         }
     </style>
-
+    @stack('styles')
     
 </head>

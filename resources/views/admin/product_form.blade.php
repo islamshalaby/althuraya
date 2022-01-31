@@ -1003,6 +1003,18 @@
                                 <textarea name="description_ar" required  class="form-control"  rows="5">{{ old('description_ar') }}</textarea>
                             </div> 
 
+                            <div class="form-group mb-4 arabic-direction">
+                                <label for="editor-ck-ar">{{ __('messages.web_description_ar') }}</label>
+                                <textarea id="editor-ck-ar" name="web_description_en" required  class="form-control"  rows="5">{{ old('web_description_en') }}</textarea>
+                            </div> 
+
+                            <div class="form-group mb-4 english-direction" >
+                                <label for="editor-ck-en">{{ __('messages.web_description_en') }}</label>
+                                <textarea id="editor-ck-en" required name="web_description_ar" class="form-control"  rows="5">{{ old('web_description_ar') }}</textarea>
+                            </div>
+            
+                            
+
                             
                         </section>
                         

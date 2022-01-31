@@ -1005,6 +1005,16 @@
                                 <label for="demo2">{{ __('messages.arabic') }}</label>
                                 <textarea name="description_ar" required  class="form-control"  rows="5">{{ $data['product']['description_ar'] }}</textarea>
                             </div> 
+
+                            <div class="form-group mb-4 arabic-direction">
+                                <label for="editor-ck-ar">{{ __('messages.web_description_ar') }}</label>
+                                <textarea id="editor-ck-ar" name="web_description_en"  class="form-control"  rows="5">{{ $data['product']['web_description_en'] }}</textarea>
+                            </div> 
+
+                            <div class="form-group mb-4 english-direction" >
+                                <label for="editor-ck-en">{{ __('messages.web_description_en') }}</label>
+                                <textarea id="editor-ck-en" name="web_description_ar" class="form-control"  rows="5">{{ $data['product']['web_description_ar'] }}</textarea>
+                            </div>
                         </section>
                         
                         

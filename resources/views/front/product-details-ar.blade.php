@@ -1,11 +1,79 @@
 @extends('front.app')
 @section('title', $data->title)
+@push('styles')
+<style>
+    /* Style the list */
+ul.breadcrumb {
+    padding: 10px 16px;
+    margin-bottom: 0 !important;
+    list-style: none;
+    background-color: #f5f5f5;
+  }
+  
+  /* Display list items side by side */
+  ul.breadcrumb li {
+    display: inline;
+    font-size: 14px;
+  }
+  
+  /* Add a slash symbol (/) before/behind each list item */
+  ul.breadcrumb li+li:before {
+    padding: 8px;
+    color: black;
+    content: "/\00a0";
+  }
+  
+  /* Add a color to all links inside the list */
+  ul.breadcrumb li a {
+    color: #ff7226;
+    text-decoration: none;
+  }
+  
+  /* Add a color on mouse-over */
+  ul.breadcrumb li a:hover {
+    text-decoration: underline;
+  }
+
+  .favorite-pr i:before {
+    line-height: 2 !important;
+  }
+
+  .favorite-pr {
+    top: 29px !important;
+  }
+</style>    
+@endpush
+
 @section('content')
     <main id="main">
         <!-- =======  product-details ======= -->
         <section class="product-details section-t8">
             <div class="container p-0">
+                <ul class="breadcrumb">
+                    <li><a href="{{ route('front.home') }}">الرئيسية</a></li>
+                    <li><a href="#">{{$data->category->title_ar}}</a></li>
+                    @if (!empty($data->sub_category_id))
+                    <li><a href="#">{{$data->subCategory->title_ar}}</a></li>
+                    @endif
+                    @if (!empty($data->sub_category_two_id))
+                    <li><a href="#">{{$data->subCategoryTwo->title_ar}}</a></li>
+                    @endif
+                    @if (!empty($data->sub_category_three_id))
+                    <li><a href="#">{{$data->subCategoryThree->title_ar}}</a></li>
+                    @endif
+                    @if (!empty($data->sub_category_four_id))
+                    <li><a href="#">{{$data->subCategoryFour->title_ar}}</a></li>
+                    @endif
+                    @if (!empty($data->sub_category_four_id))
+                    <li><a href="#">{{$data->subCategoryFour->title_ar}}</a></li>
+                    @endif
+                    @if (!empty($data->sub_category_five_id))
+                    <li><a href="#">{{$data->subCategoryFive->title_ar}}</a></li>
+                    @endif
+                    <li>{{$data->title}}</li>
+                </ul>
                 <div class="productTopBox">
+                    
                     <div class="row">
                         <div class="col-lg-3 col-md-4  col-12">
                             <div class="view view-sixth PhotoBox">
@@ -52,11 +120,11 @@
                 <div class="ProductDetailsBox">
                     <div class="title-wrap d-flex justify-content-between">
                         <div class="title-box">
-                            <h2 class="title-a"> عن المنتج</h2>
+                            <h2 class="title-a"> معلومات إضافية</h2>
                         </div>
 
                     </div>
-                    <p>{{$data->description}}</p>
+                    <p>{!! !empty($data->web_description) ? $data->web_description : $data->description !!}</p>
                 </div>
                 <div class="section-Offers ">
                     <div class="">
@@ -93,6 +161,9 @@
                                                     <a href="{{ route('front.login') }}" class="favorite-pr {{ $offer->favorite == true ? 'Active' : '' }}"><i></i></a>
                                                     @endif
                                                     <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/w_245,h_245,q_100/v1581928924/{{ $offer->main_image }}">
+                                                    <div class="outdated {{ $offer->remaining_quantity == 0 ? 'show' : '' }}">
+                                                        غير متوفر فى المخزون
+                                                    </div>
                                                     <div class="mask ">
                                                         <div class="actionBut">
                                                             <form action="{{ route('front.add.cart.put') }}" method="post">

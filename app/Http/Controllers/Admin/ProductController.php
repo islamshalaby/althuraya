@@ -98,7 +98,6 @@ class ProductController extends AdminController{
         $product = Product::where('id', request()->product_id)->first();
         $product->update(['remaining_quantity' => $count->data->count_valid_serials, 'total_quatity' => $count->data->count_all_serials, 'hidden' => 0]);
         
-        
 
         return redirect()->back()->with('success', __('messages.updated_successfully'));
     }

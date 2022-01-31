@@ -135,7 +135,7 @@
         <div id="topbar" class="d-flex align-items-center">
             <div class="container d-flex justify-content-between">
                 <div class="d-none d-sm-flex TopBarRight align-items-center">
-                    <a target="_blank" href="{{ route('terms', 'ar') }}" class="twitter"><i class="fa fa-arrow"></i> الشروط والأحكام</a>
+                    {{-- <a target="_blank" href="{{ route('terms', 'ar') }}" class="twitter"><i class="fa fa-arrow"></i> الشروط والأحكام</a> --}}
                 </div>
                 <div class="contact-info d-flex TopBarLeft align-items-center">
                     <ul class="navbar-nav">
