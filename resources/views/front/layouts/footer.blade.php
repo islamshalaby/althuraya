@@ -167,7 +167,7 @@
     <div class="ccw_plugin chatbot" style="bottom:10px; left:10px;">
         <!-- style 4   chip - logo+text -->
         <div class="style4 animated no-animation ccw-no-hover-an">
-            <a class="whatsapplink" target="_blank" href="https://api.whatsapp.com/send?phone={{ $settings->phone }}&text=السلام عليكم ورحمة الله وبركاته" class="nofocus">
+            <a class="whatsapplink" target="_blank" href="https://wa.me/{{ $settings->phone }}" class="nofocus">
                 <div class="chip style-4 ccw-analytics" id="style-4" data-ccw="style-4" style="background-color: #e4e4e4; color: rgba(0, 0, 0, 0.6)">
                     <img src="/front/assets/img/whatsapp.png" class="ccw-analytics" id="s4-icon" data-ccw="style-4" alt="WhatsApp">
                     تواصل واتساب الآن... اضغط هنا
