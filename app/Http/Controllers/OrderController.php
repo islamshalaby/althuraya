@@ -118,7 +118,8 @@ class OrderController extends Controller
             $user = auth()->user();
             
             $path='https://apitest.myfatoorah.com/v2/SendPayment';
-            $token="bearer rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL";
+            $livePath = 'https://api.myfatoorah.com/v2/SendPayment';
+            $token="bearer 0Dw3DTM1HKgyFOTY9tBsnGMioaAxsaPyB081eZKkbN1FZiR1EXGRc8yVQst55ypaxYfyveZbkDahD6fCpoMsvQrvzQdfH9IekM0nL7v7gLVsfkTlqeU13EEMlXJaMus7h5y31AbVZdPPIrY0nkb1kLnlsV5oGWYyrn5F6REu4BO1PDXpCDqKzsDDfZWKF5Yzfhnsb-1g90ppzO3AEjVdZ0xSDnkXNzCNCU3K0IDFd_jXgtUEyBHW63HCiz_w8Zf-gDZtij4FcxoFPkexTMOjep9J0-ZriEPQMhOksMhi1PQSlHGrvHr3TvGy6uaNXxOOF8tpYvUlodgWvlbaNtVvvb7rQKw9MOLsuVnMLBwaofCeZ5s2vZDaYAdPynJDXiHrFF107Pls2vNnXd0QhWHGvfvgJ4OxBH4fGL0ZSMNtm0T67fDXnXtard6onzRHl5g36jzweFnp1QYaAaAGlgGEaNty6FkJNfW4enkoaUWego9eSi8aEOPDwQ_S-HFbAJE63RjnIAIpjArdNZuKVytPBSY7OdNWMJsVDHa7jdOLFz_0Cx6oesygCASCVASnZeip5gdzxIuR0c2l9GL9vDZeFaIdmcoMRyT3aQWz0n71PgLPsl6_cMgAj3_rz5GitCqH2l7LT6BVghy6F1xNKXsdNprV7_5CfrCA3rdXJqWU1TOj39BT";
             $headers = array(
                 'Authorization:' .$token,
                 'Content-Type:application/json'
@@ -144,7 +145,7 @@ class OrderController extends Controller
 
             $payload =json_encode($fields);
             $curl_session =curl_init();
-            curl_setopt($curl_session,CURLOPT_URL, $path);
+            curl_setopt($curl_session,CURLOPT_URL, $livePath);
             curl_setopt($curl_session,CURLOPT_POST, true);
             curl_setopt($curl_session,CURLOPT_HTTPHEADER, $headers);
             curl_setopt($curl_session,CURLOPT_RETURNTRANSFER,true);
@@ -507,7 +508,8 @@ class OrderController extends Controller
             $user = auth()->user();
             
             $path='https://apitest.myfatoorah.com/v2/SendPayment';
-            $token="bearer rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL";
+            $livePath = 'https://api.myfatoorah.com/v2/SendPayment';
+            $token="bearer 0Dw3DTM1HKgyFOTY9tBsnGMioaAxsaPyB081eZKkbN1FZiR1EXGRc8yVQst55ypaxYfyveZbkDahD6fCpoMsvQrvzQdfH9IekM0nL7v7gLVsfkTlqeU13EEMlXJaMus7h5y31AbVZdPPIrY0nkb1kLnlsV5oGWYyrn5F6REu4BO1PDXpCDqKzsDDfZWKF5Yzfhnsb-1g90ppzO3AEjVdZ0xSDnkXNzCNCU3K0IDFd_jXgtUEyBHW63HCiz_w8Zf-gDZtij4FcxoFPkexTMOjep9J0-ZriEPQMhOksMhi1PQSlHGrvHr3TvGy6uaNXxOOF8tpYvUlodgWvlbaNtVvvb7rQKw9MOLsuVnMLBwaofCeZ5s2vZDaYAdPynJDXiHrFF107Pls2vNnXd0QhWHGvfvgJ4OxBH4fGL0ZSMNtm0T67fDXnXtard6onzRHl5g36jzweFnp1QYaAaAGlgGEaNty6FkJNfW4enkoaUWego9eSi8aEOPDwQ_S-HFbAJE63RjnIAIpjArdNZuKVytPBSY7OdNWMJsVDHa7jdOLFz_0Cx6oesygCASCVASnZeip5gdzxIuR0c2l9GL9vDZeFaIdmcoMRyT3aQWz0n71PgLPsl6_cMgAj3_rz5GitCqH2l7LT6BVghy6F1xNKXsdNprV7_5CfrCA3rdXJqWU1TOj39BT";
             $headers = array(
                 'Authorization:' .$token,
                 'Content-Type:application/json'
@@ -531,7 +533,7 @@ class OrderController extends Controller
 
             $payload =json_encode($fields);
             $curl_session =curl_init();
-            curl_setopt($curl_session,CURLOPT_URL, $path);
+            curl_setopt($curl_session,CURLOPT_URL, $livePath);
             curl_setopt($curl_session,CURLOPT_POST, true);
             curl_setopt($curl_session,CURLOPT_HTTPHEADER, $headers);
             curl_setopt($curl_session,CURLOPT_RETURNTRANSFER,true);
