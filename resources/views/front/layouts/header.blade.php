@@ -135,7 +135,8 @@
         <div id="topbar" class="d-flex align-items-center">
             <div class="container d-flex justify-content-between">
                 <div class="d-none d-sm-flex TopBarRight align-items-center">
-                    {{-- <a target="_blank" href="{{ route('terms', 'ar') }}" class="twitter"><i class="fa fa-arrow"></i> الشروط والأحكام</a> --}}
+                    <a target="_blank" href="tel:{{ $settings->phone }}" class="twitter"><i class="fa fa-phone"></i> {{ $settings->phone }}</a>
+                    <a target="_blank" href="mailto:{{ $settings->email }}"> <i class="fa fa-envelope-open"></i> {{ $settings->email }}</a>
                 </div>
                 <div class="contact-info d-flex TopBarLeft align-items-center">
                     <ul class="navbar-nav">
@@ -296,7 +297,7 @@
                     <div id="navbar" class="navbar">
                         <ul>
                             <li><a class="nav-link  @if(Route::current()->getName() == 'front.home') active @endif" href="{{route('front.home')}}">الرئيسية</a></li>
-                            <li class=""><a class="nav-link @if(Route::current()->getName() == 'front.about_ar') active @endif" href="{{route('front.about_ar')}}">عن التطبيق</a></li>
+                            {{-- <li class=""><a class="nav-link @if(Route::current()->getName() == 'front.about_ar') active @endif" href="{{route('front.about_ar')}}">عن التطبيق</a></li> --}}
                             <li class="dropdown scr Mob-d"><a href="#"><span> جميع الفئات</span> <i
                                         class="bi bi-chevron-down"></i></a>
                                 <ul>
@@ -322,7 +323,7 @@
                                 </ul>
                             </li>
                             <li><a class="nav-link @if(Route::current()->getName() == 'front.offers') active @endif" href="{{route('front.offers')}}">العروض<span class="Hot">Hot</span></a></li>
-                            <li class=""><a class="nav-link @if(Route::current()->getName() == 'front.contact_ar') active @endif " href="{{route('front.contact_ar')}}">تواصل معنا</a></li>
+                            {{-- <li class=""><a class="nav-link @if(Route::current()->getName() == 'front.contact_ar') active @endif " href="{{route('front.contact_ar')}}">تواصل معنا</a></li> --}}
 
                         </ul>
                     </div>

@@ -591,7 +591,7 @@
         "highlighted_text" => "Highlighted Text",
         "app_sliders" => "App Sliders",
         "web_sliders" => "Web Sliders",
-        "home_ads" => "Home Ads",
+        "home_ads" => "Home Ads (1116 × 481)",
         "usd" => "$",
         "category_has_products_add" => "Category has products .. you can not add sub categories",
         "edit_slider" => "Edit Slider",
