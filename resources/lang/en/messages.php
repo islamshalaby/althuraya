@@ -1,6 +1,7 @@
 <?php
     return [
         'users' => 'Users',
+        'product_ad' => "Product ads (1140 × 138)",
         'add' => 'Add',
         'show' => 'Show',
         'show_users' => 'Show Users',
@@ -415,7 +416,7 @@
         "link_type" => "Link Type",
         "add_new_slider" => "Add New Slider",
         "ad_place" => "Ad source",
-        "inside_slider" => "Inside Slider",
+        "inside_slider" => "Inside Slider (1920*828)",
         "normal_ad" => "Normal Ad",
         "slider_type" => "Slider Type",
         "edit_slider" => "Edit Slider",
