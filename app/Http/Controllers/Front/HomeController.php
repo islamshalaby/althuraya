@@ -395,7 +395,7 @@ class HomeController extends Controller{
             $toCurr = $webVisitor->country->currency_en;
             $currency = $this->gSliderAdetCurrency($toCurr);
 
-            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'description_ar as description', 'web_description_ar as web_description', 'final_price', 'price_before_offer', 'offer_percentage', 'category_id', 'sub_category_id', 'sub_category_two_id', 'sub_category_three_id', 'sub_category_four_id', 'sub_category_five_id'], [], 'first', 0, ['category'], $currency['value'], $this->country->id, auth()->guard('user')->user(), 0, 0, 0, 0, 0, 0, $id);
+            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'description_ar as description', 'web_description_ar as web_description', 'final_price', 'price_before_offer', 'offer_percentage', 'category_id', 'sub_category_id', 'sub_category_two_id', 'sub_category_three_id', 'sub_category_four_id', 'sub_category_five_id', 'remaining_quantity'], [], 'first', 0, ['category'], $currency['value'], $this->country->id, auth()->guard('user')->user(), 0, 0, 0, 0, 0, 0, $id);
 
             $request->type = 'recent';
             $recent_offers = $this->getOffersTypes($request, 0, 5);
