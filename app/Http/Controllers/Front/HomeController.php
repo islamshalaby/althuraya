@@ -38,6 +38,11 @@ class HomeController extends Controller{
     public function index(Request $request){
         Parent::getCartData($request);
         if ($this->webVisitor) {
+            // Mail::send('test_mail', [], function($message) {
+            //     $message->to("islamshalby510@gmail.com", "Islam")->subject
+            //         ('Order Details');
+            //     $message->from('noreply@framepergame.com','Frame Per Game');
+            // });
             $webVisitor = $this->webVisitor;
             $data['currency'] = $this->currency;
             $toCurr = $webVisitor->country->currency_en;
@@ -734,9 +739,10 @@ class HomeController extends Controller{
         }
         $path='https://apitest.myfatoorah.com/v2/SendPayment';
         $livePath = 'https://api.myfatoorah.com/v2/SendPayment';
+        $testToken = "bearer rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL";
         $token="bearer 0Dw3DTM1HKgyFOTY9tBsnGMioaAxsaPyB081eZKkbN1FZiR1EXGRc8yVQst55ypaxYfyveZbkDahD6fCpoMsvQrvzQdfH9IekM0nL7v7gLVsfkTlqeU13EEMlXJaMus7h5y31AbVZdPPIrY0nkb1kLnlsV5oGWYyrn5F6REu4BO1PDXpCDqKzsDDfZWKF5Yzfhnsb-1g90ppzO3AEjVdZ0xSDnkXNzCNCU3K0IDFd_jXgtUEyBHW63HCiz_w8Zf-gDZtij4FcxoFPkexTMOjep9J0-ZriEPQMhOksMhi1PQSlHGrvHr3TvGy6uaNXxOOF8tpYvUlodgWvlbaNtVvvb7rQKw9MOLsuVnMLBwaofCeZ5s2vZDaYAdPynJDXiHrFF107Pls2vNnXd0QhWHGvfvgJ4OxBH4fGL0ZSMNtm0T67fDXnXtard6onzRHl5g36jzweFnp1QYaAaAGlgGEaNty6FkJNfW4enkoaUWego9eSi8aEOPDwQ_S-HFbAJE63RjnIAIpjArdNZuKVytPBSY7OdNWMJsVDHa7jdOLFz_0Cx6oesygCASCVASnZeip5gdzxIuR0c2l9GL9vDZeFaIdmcoMRyT3aQWz0n71PgLPsl6_cMgAj3_rz5GitCqH2l7LT6BVghy6F1xNKXsdNprV7_5CfrCA3rdXJqWU1TOj39BT";
         $headers = array(
-            'Authorization:' .$token,
+            'Authorization:' .$testToken,
             'Content-Type:application/json'
         );
 
@@ -750,22 +756,22 @@ class HomeController extends Controller{
             for ($i = 0; $i < count($cart); $i ++) {
                 $product = Product::where('deleted', 0)->where('hidden', 0)->where('id', $cart[$i]->product_id)->first();
                 $price = $product['final_price'];
-                $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $this->country->id)->first();
-                if ($productCountry) {
-                    $price = $productCountry->price / $currency['value'];
-                    $product['price_before_offer'] = $price;
-                    if ($product['offer'] == 1) {
-                        $offerVal = $price * ($product['offer_percentage'] / 100);
-                        $price = $price - $offerVal;
-                    }
-                }
+                // $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $this->country->id)->first();
+                // if ($productCountry) {
+                //     $price = $productCountry->price / $currency['value'];
+                //     $product['price_before_offer'] = $price;
+                //     if ($product['offer'] == 1) {
+                //         $offerVal = $price * ($product['offer_percentage'] / 100);
+                //         $price = $price - $offerVal;
+                //     }
+                // }
                 
                 if (!empty($user->vip_id)) {
                     $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $product['id'])->first();
                     if ($productVip) {
-                        if ($productCountry) {
-                            $price = $productCountry->price;
-                        }
+                        // if ($productCountry) {
+                        //     $price = $productCountry->price;
+                        // }
                         $priceOffer = $product['price_before_offer'] * ($productVip->percentage / 100);
                         $price = ($product['price_before_offer']  * $cart[$i]['count']) - ($priceOffer  * $cart[$i]['count']);
                     }else {
@@ -796,12 +802,12 @@ class HomeController extends Controller{
             "CallBackUrl" => $call_back_url,
             "ErrorUrl" => $error_url,
             "Language" => "AR",
-            "CustomerEmail" => $request->email,
-            "DisplayCurrencyIso" => "USD"
+            "CustomerEmail" => $request->email
+            // "DisplayCurrencyIso" => "USD"
         );
         $payload =json_encode($fields);
         $curl_session =curl_init();
-        curl_setopt($curl_session,CURLOPT_URL, $livePath);
+        curl_setopt($curl_session,CURLOPT_URL, $path);
         curl_setopt($curl_session,CURLOPT_POST, true);
         curl_setopt($curl_session,CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl_session,CURLOPT_RETURNTRANSFER,true);
@@ -865,22 +871,22 @@ class HomeController extends Controller{
                 $product = Product::where('deleted', 0)->where('hidden', 0)->where('id', $cart[$i]['product_id'])->first();
                 $price = $product['final_price'];
                 $priceBOffer = $product['price_before_offer'];
-                $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $this->country->id)->first();
-                if ($productCountry) {
-                    $price = $productCountry->price / $currency['value'];
-                    $priceBOffer = $price;
-                    if ($product['offer'] == 1) {
-                        $offerVal = $price * ($product['offer_percentage'] / 100);
-                        $price = $price - $offerVal;
-                    }
-                }
+                // $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $this->country->id)->first();
+                // if ($productCountry) {
+                //     $price = $productCountry->price / $currency['value'];
+                //     $priceBOffer = $price;
+                //     if ($product['offer'] == 1) {
+                //         $offerVal = $price * ($product['offer_percentage'] / 100);
+                //         $price = $price - $offerVal;
+                //     }
+                // }
                 if (!empty($user->vip_id)) {
                     $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $product['id'])->first();
                     if ($productVip) {
-                        if ($productCountry) {
-                            $price = $productCountry->price / $currency['value'];
-                            $priceBOffer = $price;
-                        }
+                        // if ($productCountry) {
+                        //     $price = $productCountry->price / $currency['value'];
+                        //     $priceBOffer = $price;
+                        // }
                         $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                         $price = $priceBOffer - $priceOffer;
                         $product['offer_percentage'] = $productVip->percentage;
@@ -982,7 +988,6 @@ class HomeController extends Controller{
                                     'securityCode' => env("LIKECARD_SECURITY_CODE"),
                                     'langId' => $lang,
                                     'time' => Carbon::now()->timestamp,
-                                    // 'hash' => $this->generateHash(Carbon::now()->timestamp),
                                     'referenceId' => env('LIKECARD_HASH_KEY'),
                                     'productId' => $likecardSerials[$n]->like_product_id,
                                     'quantity' => 1
@@ -1021,6 +1026,13 @@ class HomeController extends Controller{
                                         'product_id' => $likecardSerials[$n]->product_id,
                                         'valid_to' => \Carbon\Carbon::createFromFormat('d/m/Y', $likeorder->serials[0]->validTo)->format('Y-m-d') . " 00:00:00"
                                     ]);
+                                    $framePrpduct = Product::where('id', $likecardSerials[$n]->product_id)->select('id', 'total_quatity', 'remaining_quantity')->first();
+                                    if ($framePrpduct) {
+                                        $framePrpduct->update([
+                                            'total_quatity' => $framePrpduct->total_quatity + 1,
+                                            'remaining_quantity' => $framePrpduct->remaining_quantity + 1
+                                        ]);
+                                    }
                                 }else {
                                     Warning::create([
                                         'product_id' => $likecardSerials[$n]->product_id,
@@ -1059,7 +1071,7 @@ class HomeController extends Controller{
         Mail::send('order_details_mail', $orderSerials, function($message) use ($user, $request) {
             $message->to($request->email, $user->name)->subject
                 ('Order Details');
-            $message->from('modaapp9@gmail.com','Al thuraya');
+            $message->from('noreply@framepergame.com','Frame Per Game');
         });
 
         Alert::success('عملية شراء ناجحة', 'تم إرسال الأكواد المشتراه إلى بريدك الإلكترونى');

@@ -38,12 +38,14 @@
             $("#countries_select").parent('.form-group').next('.price-container').empty()
             $(this).find("option:selected").each(function () {
                 var countryName = $(this).text(),
+                    val = $(this).attr('value'),
                     priceFor = "{{ __('messages.price_for') }}",
                     priceLabel = `${priceFor} ${countryName}`
                     
                 $("#countries_select").parent('.form-group').next('.price-container').append(`
                 <div class="form-group mb-4">
                     <label for="country_price">${priceLabel}</label>
+                    <input type="hidden" name="countries[]" value="${val}" />
                     <input type="text" name="country_price[]" class="form-control" id="country_price" placeholder="${priceLabel}" >
                 </div>
                 `)
@@ -1027,12 +1029,12 @@
                                     <input required type="number" step="any" ref="purchasing" min="0" name="purchasing_price" class="form-control" id="purchasing_price" placeholder="{{ __('messages.purchasing_price') }}" v-model="source" >
                                 </div> --}}
                                 <div class="form-group mb-4">
-                                    <label for="price_before_offer">{{ __('messages.usd_price') }} *</label>
+                                    <label for="price_before_offer">{{ __('messages.product_price') }} ({{ __('messages.dinar') }}) *</label>
                                     <input required type="number" step="any" ref="selling" min="0" name="price_before_offer" class="form-control" id="price_before_offer" placeholder="{{ __('messages.product_price') }}" v-model="sePrice" value="{{ old('price_before_offer') }}" >
                                 </div>
                                 <div class="form-group">
                                     <label for="countries_select">{{ __('messages.countries') }}</label>
-                                    <select id="countries_select" name="countries[]" class="form-control multi_tags" multiple="multiple">
+                                    <select id="countries_select" class="form-control multi_tags" multiple="multiple">
                                         @foreach ( $data['countries'] as $country )
                                         <option value="{{ $country->id }}">{{ $country->country_name }}</option>
                                         @endforeach

@@ -33,9 +33,10 @@
                         priceFor = "{{ __('messages.price_for') }}",
                         priceLabel = `${priceFor} ${countryName}`
                     
-                    $("#countries_select").parent('.form-group').next('.price-container').append(`
+                    $("#countries_select").parent('.form-group').next('.price-container').prepend(`
                     <div class="form-group mb-4">
                         <label for="country_price">${priceLabel}</label>
+                        <input type="hidden" name="countries[]" value="${val}" />
                         <input type="text" name="country_price[]" class="form-control" id="country_price" placeholder="${priceLabel}" >
                     </div>
                     `)
@@ -1023,7 +1024,7 @@
                             <div style="display: {{ count($data['product']->multiOptions) > 0 ? 'none' : '' }}" id="single-details">
                                 
                                 <div class="form-group mb-4">
-                                    <label for="price_before_offer">{{ __('messages.usd_price') }}</label>
+                                    <label for="price_before_offer">{{ __('messages.product_price') }} ({{ __('messages.dinar') }})</label>
                                     <input required {{ $data['product']['price_before_offer'] == 0 && $data['product']['final_price'] == 0 ? 'valid=0' : 'valid=1' }} type="number" step="any" min="0" name="price_before_offer" class="form-control" id="price_before_offer" placeholder="{{ __('messages.product_price') }}" value="{{ $data['product']['price_before_offer'] != 0 ? $data['product']['price_before_offer'] : $data['product']['final_price'] }}" >
                                 </div>
                                 
@@ -1031,7 +1032,7 @@
 
                             <div class="form-group">
                                 <label for="countries_select">{{ __('messages.countries') }}</label>
-                                <select id="countries_select" name="countries[]" class="form-control multi_tags" multiple="multiple">
+                                <select id="countries_select" class="form-control multi_tags" multiple="multiple">
                                     @foreach ( $data['countries'] as $country )
                                     <option {{ in_array($country->id, $data['product_countries']) ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->country_name }}</option>
                                     @endforeach
@@ -1042,6 +1043,7 @@
                                 @foreach ($data['product']->prices as $price)
                                 <div class="form-group mb-4">
                                     <label for="country_price">{{ __('messages.price_for') . ' ' . $price->country_name }}</label>
+                                    <input type="hidden" name="countries[]" value="{{ $price->country_id }}" />
                                     <input type="text" name="country_price[]" class="form-control" id="country_price" value="{{ $price->price }}" placeholder="{{ __('messages.price_for') . ' ' . $price->country_name }}" >
                                 </div>
                                 @endforeach

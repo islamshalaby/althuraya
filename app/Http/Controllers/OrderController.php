@@ -83,25 +83,25 @@ class OrderController extends Controller
                 for ($i = 0; $i < count($cart); $i ++) {
                     $product = Product::where('deleted', 0)->where('hidden', 0)->where('id', $cart[$i]->product_id)->first();
                     $price = $product['final_price'];
-                    $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
-                    if ($productCountry) {
-                        // dd($currency['value']);
-                        $price = $productCountry->price;
-                        $product['price_before_offer'] = $price;
+                    // $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
+                    // if ($productCountry) {
+                    //     // dd($currency['value']);
+                    //     $price = $productCountry->price;
+                    //     $product['price_before_offer'] = $price;
                         
-                        if ($product['offer'] == 1) {
-                            $offerVal = $price * ($product['offer_percentage'] / 100);
-                            $price = $price - $offerVal;
-                        }
-                        $price = $price / $currency['value'];
-                    }
+                    //     if ($product['offer'] == 1) {
+                    //         $offerVal = $price * ($product['offer_percentage'] / 100);
+                    //         $price = $price - $offerVal;
+                    //     }
+                    //     $price = $price / $currency['value'];
+                    // }
                     
                     if (!empty(auth()->user()->vip_id)) {
                         $productVip = ProductVip::where('vip_id', auth()->user()->vip_id)->where('product_id', $product['id'])->first();
                         if ($productVip) {
-                            if ($productCountry) {
-                                $price = $productCountry->price / $currency['value'];
-                            }
+                            // if ($productCountry) {
+                            //     $price = $productCountry->price / $currency['value'];
+                            // }
                             
                             $priceOffer = $price * ($productVip->percentage / 100);
                             $price = ($price  * $cart[$i]['count']) - ($priceOffer  * $cart[$i]['count']);
@@ -138,9 +138,9 @@ class OrderController extends Controller
                 "CallBackUrl" => $call_back_url,
                 "ErrorUrl" => $error_url,
                 "Language" => "AR",
-                "CustomerEmail" => $user->email,
+                "CustomerEmail" => $user->email
                 // "CustomerMobile" => substr($user->phone, 4),
-                "DisplayCurrencyIso" => "USD"
+                // "DisplayCurrencyIso" => "USD"
             ); 
 
             $payload =json_encode($fields);
@@ -235,24 +235,24 @@ class OrderController extends Controller
                     $product = Product::where('deleted', 0)->where('hidden', 0)->where('id', $cart[$i]['product_id'])->first();
                     $price = $product['final_price'];
                     $priceBOffer = $product['price_before_offer'];
-                    $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
-                    if ($productCountry) {
-                        $price = $productCountry->price;
-                        $priceBOffer = $price;
-                        if ($product['offer'] == 1) {
-                            $offerVal = $price * ($product['offer_percentage'] / 100);
-                            $price = $price - $offerVal;
-                        }
-                        $price = $price / $currency['value'];
-                    }
+                    // $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
+                    // if ($productCountry) {
+                    //     $price = $productCountry->price;
+                    //     $priceBOffer = $price;
+                    //     if ($product['offer'] == 1) {
+                    //         $offerVal = $price * ($product['offer_percentage'] / 100);
+                    //         $price = $price - $offerVal;
+                    //     }
+                    //     $price = $price / $currency['value'];
+                    // }
                     
                     if (!empty($user->vip_id)) {
                         $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $product['id'])->first();
                         if ($productVip) {
-                            if ($productCountry) {
-                                $price = $productCountry->price / $currency['value'];
-                                $priceBOffer = $price;
-                            }
+                            // if ($productCountry) {
+                            //     $price = $productCountry->price / $currency['value'];
+                            //     $priceBOffer = $price;
+                            // }
                             $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                             $price = $priceBOffer - $priceOffer;
                             $product['offer_percentage'] = $productVip->percentage;
@@ -392,6 +392,14 @@ class OrderController extends Controller
                                             'product_id' => $likecardSerials[$n]->product_id,
                                             'valid_to' => \Carbon\Carbon::createFromFormat('d/m/Y', $likeorder->serials[0]->validTo)->format('Y-m-d') . " 00:00:00"
                                         ]);
+
+                                        $framePrpduct = Product::where('id', $likecardSerials[$n]->product_id)->select('id', 'total_quatity', 'remaining_quantity')->first();
+                                        if ($framePrpduct) {
+                                            $framePrpduct->update([
+                                                'total_quatity' => $framePrpduct->total_quatity + 1,
+                                                'remaining_quantity' => $framePrpduct->remaining_quantity + 1
+                                            ]);
+                                        }
                                     }else {
                                         Warning::create([
                                             'product_id' => $likecardSerials[$n]->product_id,
@@ -480,25 +488,24 @@ class OrderController extends Controller
             }
             $product = Product::where('id', $request->product_id)->first();
             $price = $product['final_price'];
-            $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
-            if ($productCountry) {
-                // dd($currency['value']);
-                $price = $productCountry->price;
-                $product['price_before_offer'] = $price;
+            // $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
+            // if ($productCountry) {
+            //     $price = $productCountry->price;
+            //     $product['price_before_offer'] = $price;
                 
-                if ($product['offer'] == 1) {
-                    $offerVal = $price * ($product['offer_percentage'] / 100);
-                    $price = $price - $offerVal;
-                }
-                $price = $price / $currency['value'];
-            }
+            //     if ($product['offer'] == 1) {
+            //         $offerVal = $price * ($product['offer_percentage'] / 100);
+            //         $price = $price - $offerVal;
+            //     }
+            //     $price = $price / $currency['value'];
+            // }
             
             if (!empty(auth()->user()->vip_id)) {
                 $productVip = ProductVip::where('vip_id', auth()->user()->vip_id)->where('product_id', $product['id'])->first();
                 if ($productVip) {
-                    if ($productCountry) {
-                        $price = $productCountry->price / $currency['value'];
-                    }
+                    // if ($productCountry) {
+                    //     $price = $productCountry->price / $currency['value'];
+                    // }
                     $priceOffer = $product['price_before_offer'] * ($productVip->percentage / 100);
                     $price = $product['price_before_offer'] - $priceOffer;
                 }
@@ -526,9 +533,9 @@ class OrderController extends Controller
                 "CallBackUrl" => $call_back_url,
                 "ErrorUrl" => $error_url,
                 "Language" => "AR",
-                "CustomerEmail" => $user->email,
+                "CustomerEmail" => $user->email
                 // "CustomerMobile" => substr($user->phone, 4),
-                "DisplayCurrencyIso" => "USD"
+                // "DisplayCurrencyIso" => "USD"
             ); 
 
             $payload =json_encode($fields);
@@ -596,23 +603,23 @@ class OrderController extends Controller
         $product = Product::where('id', $request->product_id)->first();
         $price = $product['final_price'];
         $priceBOffer = $product['price_before_offer'];
-        $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
-        if ($productCountry) {
-            $price = $productCountry->price;
-            $priceBOffer = $price;
-            if ($product['offer'] == 1) {
-                $offerVal = $price * ($product['offer_percentage'] / 100);
-                $price = $price - $offerVal;
-            }
-            $price = $price / $currency['value'];
-        }
+        // $productCountry = ProductCountry::where('product_id', $product->id)->where('country_id', $visitor->country->id)->first();
+        // if ($productCountry) {
+        //     $price = $productCountry->price;
+        //     $priceBOffer = $price;
+        //     if ($product['offer'] == 1) {
+        //         $offerVal = $price * ($product['offer_percentage'] / 100);
+        //         $price = $price - $offerVal;
+        //     }
+        //     $price = $price / $currency['value'];
+        // }
         if (!empty($user->vip_id)) {
             $productVip = ProductVip::where('vip_id', $user->vip_id)->where('product_id', $product['id'])->first();
             if ($productVip) {
-                if ($productCountry) {
-                    $price = $productCountry->price / $currency['value'];
-                    $priceBOffer = $price;
-                }
+                // if ($productCountry) {
+                //     $price = $productCountry->price / $currency['value'];
+                //     $priceBOffer = $price;
+                // }
                 $priceOffer = $priceBOffer * ($productVip->percentage / 100);
                 $price = $priceBOffer - $priceOffer;
                 $product['offer_percentage'] = $productVip->percentage;
@@ -761,6 +768,14 @@ class OrderController extends Controller
                                 'product_id' => $likecardSerials[$n]->product_id,
                                 'valid_to' => \Carbon\Carbon::createFromFormat('d/m/Y', $likeorder->serials[0]->validTo)->format('Y-m-d') . " 00:00:00"
                             ]);
+
+                            $framePrpduct = Product::where('id', $likecardSerials[$n]->product_id)->select('id', 'total_quatity', 'remaining_quantity')->first();
+                            if ($framePrpduct) {
+                                $framePrpduct->update([
+                                    'total_quatity' => $framePrpduct->total_quatity + 1,
+                                    'remaining_quantity' => $framePrpduct->remaining_quantity + 1
+                                ]);
+                            }
                         }else {
                             Warning::create([
                                 'product_id' => $likecardSerials[$n]->product_id,

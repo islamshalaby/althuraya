@@ -174,7 +174,7 @@ class Product extends Model
     }
 
     public function prices() {
-        return $this->belongsToMany('App\Country', 'product_countries', 'product_id', 'country_id')->select('*');
+        return $this->belongsToMany('App\Country', 'product_countries', 'product_id', 'country_id')->select('*', 'countries.id as country_id');
     }
 
     public function vips() {
