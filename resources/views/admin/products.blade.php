@@ -280,7 +280,7 @@
                                                                                     <div class="input-group mb-4">
                                                                                         <div class="input-group-prepend">
                                                                                         <span class="input-group-text" id="basic-addon5">
-                                                                                            <a href="{{ route('products.delete_serial', $serial->id) }}" onclick='return confirm("{{ __('messages.are_you_sure') }}");' >
+                                                                                            <a href="{{ route('products.delete_serial', [$product->id, $serial->id]) }}" onclick='return confirm("{{ __('messages.are_you_sure') }}");' >
                                                                                                 <i class="far text-danger fa-trash-alt"></i>
                                                                                             </a>
                                                                                         </span>
@@ -292,7 +292,7 @@
                                                                                     <div class="input-group mb-4">
                                                                                         <div class="input-group-prepend">
                                                                                         <span class="input-group-text" id="basic-addon5">
-                                                                                            <a href="{{ route('products.delete_serial', $serial->id) }}" onclick='return confirm("{{ __('messages.are_you_sure') }}");' >
+                                                                                            <a href="{{ route('products.delete_serial', [$product->id, $serial->id]) }}" onclick='return confirm("{{ __('messages.are_you_sure') }}");' >
                                                                                                 <i class="far text-danger fa-trash-alt"></i>
                                                                                             </a>
                                                                                         </span>

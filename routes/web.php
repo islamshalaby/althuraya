@@ -512,7 +512,7 @@ Route::group([
          Route::get('review/{product}/{status}' , 'ProductController@review_product')->name('products.review');
          Route::post('update-amount' , 'ProductController@updateAmount')->name('products.update_amount');
          Route::put('upload-serials' , 'ProductController@import')->name('products.upload.serials');
-         Route::get('delete-serial/{serial_id}' , 'ProductController@deleteSerial')->name('products.delete_serial');
+         Route::get('delete-serial/{product_id}/{serial_id}' , 'ProductController@deleteSerial')->name('products.delete_serial');
 
     });
 

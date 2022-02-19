@@ -871,6 +871,8 @@ class ProductController extends AdminController{
     public function deleteSerial(Request $request) {
         $path='http://athath-ads.tk/api/serials/delete/' . $request->serial_id;
         $result = APIHelpers::fetchApi($path, [], 'json', 'get');
+        $product = Product::where('id', $request->product_id)->select('id', 'total_quatity', 'remaining_quantity')->first();
+        $product->update(['remaining_quantity' => $product->remaining_quantity - 1, 'total_quatity' => $product->total_quatity - 1]);
 
         return redirect()->back()->with('success', __('messages.deleted_successfully'));
     }
