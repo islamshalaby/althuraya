@@ -24,8 +24,10 @@
         })
         var countriesArray = {{ $data['product_countries_name'] }}
         $("#countries_select").on("change", function() {
+            
             $(this).find("option:selected").each(function () {
                 var val = $(this).attr('value')
+                
                 
                 if ( countriesArray.includes(Number(val)) == false ) {
                     countriesArray.push(Number(val))
@@ -45,7 +47,10 @@
                     if (countriesArray !== -1) {
                         countriesArray.splice(index, 1);
                     }
+                    console.log(countriesArray)
                 }
+                
+                
             })
         })
 

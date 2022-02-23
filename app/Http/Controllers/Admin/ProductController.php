@@ -234,12 +234,14 @@ class ProductController extends AdminController{
             $product_post['brand_id'] = 0;
         }
         $prices = [];
-        if ($request->countries && count($request->countries) > 0) {
-            for ($p = 0; $p < count($request->countries); $p ++) {
-                $prices[$request->countries[$p]] = ['price' => $request->country_price[$p]];
+        if ($request->country_price && count($request->country_price) > 0) {
+            for ($p = 0; $p < count($request->country_price); $p ++) {
+                if (!empty($request->country_price[$p])) {
+                    $prices[$request->countries[$p]] = ['price' => $request->country_price[$p]];
+                }
             }
         }
-
+        
         $product->prices()->sync($prices);
 
         $vips = [];
