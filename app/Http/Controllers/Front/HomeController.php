@@ -278,7 +278,6 @@ class HomeController extends Controller{
         $toCurr = $webVisitor->country->currency_en;
         $currency = $this->gSliderAdetCurrency($toCurr);
         $data['recent_offers'] = $this->getOffersTypes($request);
-        // dd($data['recent_offers']);
         for ($i = 0; $i < count($data['recent_offers']); $i ++) {
             if ($data['recent_offers'][$i]->main_image) {
                 $data['recent_offers'][$i]->main_image = $data[$i]->main_image->image;

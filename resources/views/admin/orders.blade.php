@@ -24,7 +24,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
             sumDelivery = "{{ $data['sum_delivery'] }}",
             sumTotal = "{{ $data['sum_total'] }}",
             totalString = "{{ __('messages.total_with_delivery') }}",
-            dinar = "{{ __('messages.usd') }}"
+            dinar = "{{ __('messages.dinar') }}"
         var dTbls = $('#order-tbl').DataTable( {
             dom: 'Blfrtip',
             buttons: {
@@ -65,7 +65,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
     </script>
     <script>
         var price = dTbls.column(4).data(),
-            dinar = "{{ __('messages.usd') }}"
+            dinar = "{{ __('messages.dinar') }}"
             
         var totalPrice = parseFloat(price.reduce(function (a, b) { return parseFloat(a) + parseFloat(b); }, 0)).toFixed(3)
 
@@ -172,7 +172,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                                     </a>
                                 </td>
                                 
-                                <td>{{ $order->subtotal_price . " " . __('messages.usd') }}</td>
+                                <td>{{ $order->subtotal_price . " " . __('messages.dinar') }}</td>
                                 <td class="text-center blue-color hide_col"><a href="{{ route('orders.details', $order->id) }}" ><i class="far fa-eye"></i></a></td>
                                 <td class="text-center blue-color hide_col"><a target="_blank" href="{{ route('webview.invoice', $order->id) }}" ><i class="far fa-eye"></i></a></td>
                             </tr>

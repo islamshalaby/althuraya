@@ -85,7 +85,7 @@
     // convert currency
     public static function converCurruncy2($from, $to) {
       if (empty($to)) {
-        $to = 'usd';
+        $to = 'kwd';
       }
       // Fetching JSON
       $req_url = 'https://v6.exchangerate-api.com/v6/d265b7845f8c648be11097da/pair/' . $from . '/' . $to;

@@ -36,8 +36,8 @@ return [
         'redirect' => env('APP_URL').'/callback',
     ],
     'google' => [
-        'client_id' => '383894292580-as5t4eq234q9nuvem3qv25ki57gpt4lt.apps.googleusercontent.com',
-        'client_secret' => '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',
+        'client_id' => '415811579142-vc6s7mp0rlds5r696t6bfuth2opc1jkv.apps.googleusercontent.com',
+        'client_secret' => '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',
         'redirect' => env('APP_URL').'/auth/google/callback',
     ],
 

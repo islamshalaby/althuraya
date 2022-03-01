@@ -58,25 +58,25 @@ class HomeController extends Controller
             $currency = $visitor->country->currency_en;
             $toCurr = trim(strtolower($currency));
         
-            if ($toCurr == "usd") {
+            if ($toCurr == "kwd") {
                 $currency = ["value" => 1];
             }else {
-                $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
+                $currency = Currency::where('from', "kwd")->where('to', $toCurr)->first();
             }
             if (isset($currency['id'])) {
                 if (!$currency->updated_at->isToday()) {
-                    $result = APIHelpers::converCurruncy2("usd", $toCurr);
+                    $result = APIHelpers::converCurruncy2("kwd", $toCurr);
                     if(isset($result['value'])){
                         $currency->update(['value' => $result['value'], 'updated_at' => Carbon::now()]);
-                        $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
+                        $currency = Currency::where('from', "kwd")->where('to', $toCurr)->first();
                     }
                 }
                 
             }else {
-                $result = APIHelpers::converCurruncy2("usd", $toCurr);
+                $result = APIHelpers::converCurruncy2("kwd", $toCurr);
                 if(isset($result['value']) && !$currency){
-                    $result = APIHelpers::converCurruncy2("usd", $toCurr);
-                    $currency = Currency::create(['value' => $result['value'], "from" => "usd", "to" => $toCurr]);
+                    $result = APIHelpers::converCurruncy2("kwd", $toCurr);
+                    $currency = Currency::create(['value' => $result['value'], "from" => "kwd", "to" => $toCurr]);
                 }
             }
 
@@ -167,28 +167,28 @@ class HomeController extends Controller
             $currency = $visitor->country->currency_en;
             $toCurr = trim(strtolower($currency));
         
-            if ($toCurr == "usd") {
+            if ($toCurr == "kwd") {
                 $currency = ["value" => 1];
             }else {
-                $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
+                $currency = Currency::where('from', "kwd")->where('to', $toCurr)->first();
             }
 
             if (isset($currency['id'])) {
                 if (!$currency->updated_at->isToday()) {
-                    $result = APIHelpers::converCurruncy2("usd", $toCurr);
+                    $result = APIHelpers::converCurruncy2("kwd", $toCurr);
                     if(isset($result['value'])){
                         $currency->update(['value' => $result['value'], 'updated_at' => Carbon::now()]);
-                        $currency = Currency::where('from', "usd")->where('to', $toCurr)->first();
+                        $currency = Currency::where('from', "kwd")->where('to', $toCurr)->first();
                     }
                     
                 }
                 
             }else {
-                $result = APIHelpers::converCurruncy2("usd", $toCurr);
+                $result = APIHelpers::converCurruncy2("kwd", $toCurr);
                 // dd($result);
                 if(isset($result['value']) && !$currency){
-                    $result = APIHelpers::converCurruncy2("usd", $toCurr);
-                    $currency = Currency::create(['value' => $result['value'], "from" => "usd", "to" => $toCurr]);
+                    $result = APIHelpers::converCurruncy2("kwd", $toCurr);
+                    $currency = Currency::create(['value' => $result['value'], "from" => "kwd", "to" => $toCurr]);
                 }
             }
 

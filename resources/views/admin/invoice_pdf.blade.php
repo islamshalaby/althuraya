@@ -93,13 +93,13 @@
                     @endif
                 </td>
                 <td style="padding: 5px;vertical-align: top;text-align: center;border-bottom: 1px solid #eee;">
-                    {{ $item->price_before_offer }} {{ __('messages.usd') }}
+                    {{ $item->price_before_offer }} {{ __('messages.dinar') }}
                 </td>
                 <td style="padding: 5px;vertical-align: top;text-align: center;border-bottom: 1px solid #eee;">
-                    {{ $item->final_price }} {{ __('messages.usd') }}
+                    {{ $item->final_price }} {{ __('messages.dinar') }}
                 </td>
                 <td style="padding: 5px;vertical-align: top;text-align: center;border-bottom: 1px solid #eee;">
-                    {{ (double)$item->final_price * (double)$item->count }} {{ __('messages.usd') }}
+                    {{ (double)$item->final_price * (double)$item->count }} {{ __('messages.dinar') }}
                 </td>
                 
             </tr>
@@ -124,7 +124,7 @@
                 </td>
                 
                 <td colspan="2" style="padding: 5px;text-align:center;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
-                    {{ $data['order']->subtotal_price }} {{ __('messages.usd') }}
+                    {{ $data['order']->subtotal_price }} {{ __('messages.dinar') }}
                 </td>
                 <td style="padding: 5px;text-align:center;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
                     
@@ -142,7 +142,7 @@
                 <td style="padding: 5px;vertical-align: top;text-align:right;border-top: 2px solid #eee;"></td>
                 
                 <td colspan="2" style="padding: 5px;vertical-align: top;text-align: right;border-top: 2px solid #eee;font-weight: bold;">
-                    {{ $data['order']['total_price'] }} {{ __('messages.usd') }}
+                    {{ $data['order']['total_price'] }} {{ __('messages.dinar') }}
                 </td>
                 <td style="padding: 5px;vertical-align: top;text-align:right;border-top: 2px solid #eee;"></td>
             </tr> --}}

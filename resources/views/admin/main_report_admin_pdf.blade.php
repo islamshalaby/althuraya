@@ -126,7 +126,7 @@
                 </td>
                 
                 <td style="padding: 5px;vertical-align: top;text-align: center;border-bottom: 1px solid #eee;">
-                    {{ $order->subtotal_price . " " . __('messages.usd') }}
+                    {{ $order->subtotal_price . " " . __('messages.dinar') }}
                 </td>
             </tr>
             <?php $i ++; ?>

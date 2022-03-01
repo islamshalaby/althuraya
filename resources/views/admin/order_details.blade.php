@@ -58,14 +58,14 @@
                         <tr>
                             <td class="label-table" > {{ __('messages.price') }} </td>
                             <td>
-                                {{ $data['order']['subtotal_price'] . " " . __('messages.usd') }}
+                                {{ $data['order']['subtotal_price'] . " " . __('messages.dinar') }}
                             </td>
                         </tr>  
                         
                         <tr>
                             <td class="label-table" > {{ __('messages.total') }} </td>
                             <td>
-                                {{ $data['order']['total_price'] . " " . __('messages.usd') }}
+                                {{ $data['order']['total_price'] . " " . __('messages.dinar') }}
                             </td>
                         </tr>
                        
@@ -90,7 +90,7 @@
                                 </a>
                             </td>
                             <td>
-                                {{ $item->product->final_price . " " . __('messages.usd') }}
+                                {{ $item->product->final_price . " " . __('messages.dinar') }}
                             </td>
                             <td>
                                 @if (count($item->serials) > 0)
