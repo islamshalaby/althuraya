@@ -38,7 +38,6 @@ class GoogleController extends Controller
             ->orWhere('email', $user->email)->first();
             
             if ($finduser) {
-                dd($user);
                 $finduser->google_id = $user->id;
                 $finduser->save();
                 Auth::guard('user')->login($finduser);
