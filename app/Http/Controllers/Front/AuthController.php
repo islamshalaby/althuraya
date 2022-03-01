@@ -68,10 +68,11 @@ class AuthController extends Controller{
             $visitor->update(['user_id' => $user->id]);
         }
         $data['user'] = $user;
+        $data['settings'] = Setting::where('id', 1)->select("phone", "email", "logo")->first();
         Mail::send('confirm_email', $data, function($message) use ($user) {
             $message->to($user->email, $user->name)->subject
                 ('Account Activation');
-            $message->from('modaapp9@gmail.com','Al thuraya');
+            $message->from('modaapp9@gmail.com','framepergame.com.kw');
         });
 
         Alert::success('حساب جديد', 'لتفعيل حسابك اضغط على الرابط الذى تم إرساله على بريدك الإلكترونى');
