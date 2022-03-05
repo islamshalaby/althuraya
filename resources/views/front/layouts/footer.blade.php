@@ -162,14 +162,14 @@
                 border-radius: 50%;
             }
     </style>
-    <div class="ccw_plugin chatbot" style="bottom:10px; left:10px;">
+    <div class="ccw_plugin chatbot" style="bottom:15px; left:15px;">
         <!-- style 4   chip - logo+text -->
         <div class="style4 animated no-animation ccw-no-hover-an">
             <a class="whatsapplink" target="_blank" href="https://wa.me/{{ $settings->phone }}" class="nofocus">
-                <div class="chip style-4 ccw-analytics" id="style-4" data-ccw="style-4" style="background-color: #e4e4e4; color: rgba(0, 0, 0, 0.6)">
-                    <img src="/front/assets/img/whatsapp.png" class="ccw-analytics" id="s4-icon" data-ccw="style-4" alt="WhatsApp">
-                    تواصل واتساب الآن... اضغط هنا
-                </div>
+                <img style="width: 40px" src="/front/assets/img/whatsapp.png" class="ccw-analytics" id="s4-icon" data-ccw="style-4" alt="WhatsApp">
+                {{-- <div class="chip style-4 ccw-analytics" id="style-4" data-ccw="style-4" style="background-color: #e4e4e4; color: rgba(0, 0, 0, 0.6)">
+                    
+                </div> --}}
             </a>
         </div>
     </div>

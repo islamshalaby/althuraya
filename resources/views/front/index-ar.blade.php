@@ -3,8 +3,90 @@
 @section('description', $meta->home_description_ar)
 
 @section('content')
+<!-- ======= Latest Offers Section ======= -->
+        <section class="section-Offers section-t8">
+            <div class="container">
+                {{-- <div class="row">
+                    <div class="col-md-12">
+                        <div class="title-wrap d-flex justify-content-between">
+                            <div class="title-box">
+                                <h2 class="title-a">احدث العروض</h2>
+                            </div>
+                            <div class="title-link">
+                                <a href="{{route('front.offers')}}">جميع العروض
+                                    <span class="bi bi-chevron-left"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
+
+                <div style="margin-top: 20px" id="offer-carousel" class="swiper-container">
+                    <div class="swiper-wrapper">
+                        @if (count($data['recent_offers']) > 0)
+                        @foreach ($data['recent_offers'] as $offer)
+                        <div class="carousel-item-c swiper-slide">
+                            <div class="card productList">
+                                <div class="view view-sixth card-img-top">
+                                    @if (Auth::guard('user')->user())
+                                    <form action="{{ route('front.like.product.put') }}" method="post">
+                                        @csrf
+                                        <input name="_method" type="hidden" value="PUT">
+                                        <input type="hidden" name="product_id" value="{{ $offer->id }}" />
+                                        <a href="#" class="favorite-pr like {{ $offer->favorite == true ? 'Active' : '' }}"><i></i></a>
+                                    </form>
+                                    @else
+                                    <a href="{{ route('front.login') }}" class="favorite-pr {{ $offer->favorite == true ? 'Active' : '' }}"><i></i></a>
+                                    @endif
+                                    <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/q_100/v1581928924/{{ $offer->main_image }}">
+                                    <div class="outdated {{ $offer->remaining_quantity == 0 ? 'show' : '' }}">
+                                        غير متوفر فى المخزون
+                                    </div>
+                                    <div class="mask ">
+                                        <div class="actionBut">
+                                            <form action="{{ route('front.add.cart.put') }}" method="post">
+                                                @csrf
+                                                <input name="_method" type="hidden" value="PUT">
+                                                <input type="hidden" name="product_id" value="{{ $offer->id }}"  />
+                                                <input type="hidden" name="count" value="1"  />
+                                                <a href="#" class="AddCart info">اضف الى السله</a>
+                                            </form>
+                                            <a href="{{route('front.product_details_ar',$offer->id)}}" class="info viewProduct">عرض المنتج</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p><a href="{{route('front.product_details_ar',$offer->id)}}">{{ $offer->title }}</a></p>
+                                    <div class="PriceDiscount">
+                                        <div class="PriceBox">
+                                            @if ($offer->offer > 0)
+                                            <span>{{ $offer->price_before_offer }} {{ $data['currency']->currency_ar }}</span>
+                                            @endif
+                                            {{ $offer->final_price }} {{ $data['currency']->currency_ar }}
+                                        </div>
+                                        @if ($offer->offer > 0)
+                                        <div class="DiscountBox">
+                                            {{ $offer->offer_percentage }} %
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End carousel item -->
+                        @endforeach
+
+                        @endif
+
+                    </div>
+                </div>
+
+                <div class="offer-carousel-pagination carousel-pagination"></div>
+            </div>
+        </section>
+        <!-- End Latest Offers Section -->
 <!-- ======= slider Section ======= -->
-    <div class="intro intro-carousel swiper-container container">
+    {{-- <div class="intro intro-carousel swiper-container container">
 
         <div class="swiper-wrapper">
 
@@ -39,7 +121,7 @@
             @endif
         </div>
         <div class="swiper-pagination"></div>
-    </div>
+    </div> --}}
     <!-- End slider Section -->
 
     <main id="main">
@@ -59,7 +141,7 @@
                 <div class="row">
                     @if (count($data['categories']) > 0)
                     @foreach ($data['categories'] as $cat)
-                    <div class="col-lg-3 col-md-3 col-6">
+                    <div class="col-lg-2 col-md-2 col-6">
                         <a href="{{ $cat->url }}">
                             <div class="view view-sixth">
                                 
@@ -190,88 +272,7 @@
         </section>
         <!-- End Banner Section -->
 
-        <!-- ======= Latest Offers Section ======= -->
-        <section class="section-Offers section-t8">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="title-wrap d-flex justify-content-between">
-                            <div class="title-box">
-                                <h2 class="title-a">احدث العروض</h2>
-                            </div>
-                            <div class="title-link">
-                                <a href="{{route('front.offers')}}">جميع العروض
-                                    <span class="bi bi-chevron-left"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="offer-carousel" class="swiper-container">
-                    <div class="swiper-wrapper">
-                        @if (count($data['recent_offers']) > 0)
-                        @foreach ($data['recent_offers'] as $offer)
-                        <div class="carousel-item-c swiper-slide">
-                            <div class="card productList">
-                                <div class="view view-sixth card-img-top">
-                                    @if (Auth::guard('user')->user())
-                                    <form action="{{ route('front.like.product.put') }}" method="post">
-                                        @csrf
-                                        <input name="_method" type="hidden" value="PUT">
-                                        <input type="hidden" name="product_id" value="{{ $offer->id }}" />
-                                        <a href="#" class="favorite-pr like {{ $offer->favorite == true ? 'Active' : '' }}"><i></i></a>
-                                    </form>
-                                    @else
-                                    <a href="{{ route('front.login') }}" class="favorite-pr {{ $offer->favorite == true ? 'Active' : '' }}"><i></i></a>
-                                    @endif
-                                    <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/q_100/v1581928924/{{ $offer->main_image }}">
-                                    <div class="outdated {{ $offer->remaining_quantity == 0 ? 'show' : '' }}">
-                                        غير متوفر فى المخزون
-                                    </div>
-                                    <div class="mask ">
-                                        <div class="actionBut">
-                                            <form action="{{ route('front.add.cart.put') }}" method="post">
-                                                @csrf
-                                                <input name="_method" type="hidden" value="PUT">
-                                                <input type="hidden" name="product_id" value="{{ $offer->id }}"  />
-                                                <input type="hidden" name="count" value="1"  />
-                                                <a href="#" class="AddCart info">اضف الى السله</a>
-                                            </form>
-                                            <a href="{{route('front.product_details_ar',$offer->id)}}" class="info viewProduct">عرض المنتج</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <p><a href="{{route('front.product_details_ar',$offer->id)}}">{{ $offer->title }}</a></p>
-                                    <div class="PriceDiscount">
-                                        <div class="PriceBox">
-                                            @if ($offer->offer > 0)
-                                            <span>{{ $offer->price_before_offer }} {{ $data['currency']->currency_ar }}</span>
-                                            @endif
-                                            {{ $offer->final_price }} {{ $data['currency']->currency_ar }}
-                                        </div>
-                                        @if ($offer->offer > 0)
-                                        <div class="DiscountBox">
-                                            {{ $offer->offer_percentage }} %
-                                        </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End carousel item -->
-                        @endforeach
-
-                        @endif
-
-                    </div>
-                </div>
-
-                <div class="offer-carousel-pagination carousel-pagination"></div>
-            </div>
-        </section>
-        <!-- End Latest Offers Section -->
+        
 
 
     </main>

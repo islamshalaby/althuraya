@@ -162,7 +162,7 @@
                         <li class="nav-item dropdown">
 
                             @if (isset(Auth::guard('user')->user()->id))
-                            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bi bi-person-fill"></i>حسابى</a>
+                            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bi bi-person-fill"></i>اسم المستخدم</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item " href="{{ route('front.orders') }}">الطلبات السابقة</a>
                                 <a class="dropdown-item " href="{{ route('front.change.password') }}">تغيير كلمة المرور</a>
