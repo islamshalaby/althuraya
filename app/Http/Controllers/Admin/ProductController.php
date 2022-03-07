@@ -43,7 +43,7 @@ class ProductController extends AdminController{
         } else { // 
             $cFile = '@' . realpath($tempFile);
         }
-        $path='http://athath-ads.tk/api/serials/upload';
+        $path=env('SERIALS_BASE_URL') . 'api/serials/upload';
         $token='$2y$12$ZtgKLOyfvyXH33JE67Ei0.qupt771t62d21M4/OJumBmsZ1bexxpNo';
         $headers = array(
             'Authorization:' .$token,
@@ -63,7 +63,7 @@ class ProductController extends AdminController{
         curl_close ($ch);
 
         // get valid - all serials count
-        $path2='http://athath-ads.tk/api/serials/count/' . request()->product_id;
+        $path2=env('SERIALS_BASE_URL') . 'api/serials/count/' . request()->product_id;
         $count = APIHelpers::fetchApi($path2, [], 'json', 'get');
         
         // update remanning - total quantity
@@ -82,7 +82,7 @@ class ProductController extends AdminController{
             'valid_to' => 'required'
         ]);
         
-        $path='http://athath-ads.tk/api/serials/normal-upload';
+        $path=env('SERIALS_BASE_URL') . 'api/serials/normal-upload';
         $fields =array(
             'product_id' => $request->product_id,
             'serials' => $request->serials,
@@ -91,7 +91,7 @@ class ProductController extends AdminController{
         APIHelpers::fetchApi($path, $fields, 'json', 'post');
         
         // get valid - all serials count
-        $path2='http://athath-ads.tk/api/serials/count/' . request()->product_id;
+        $path2=env('SERIALS_BASE_URL') . 'api/serials/count/' . request()->product_id;
         $count = APIHelpers::fetchApi($path2, [], 'json', 'get');
 
         // update remanning - total quantity
@@ -129,7 +129,7 @@ class ProductController extends AdminController{
 
         if (count($data['products']) > 0) {
             for ($i =0; $i < count($data['products']); $i ++) {
-                $path='http://athath-ads.tk/api/serials/valid';
+                $path=env('SERIALS_BASE_URL') . 'api/serials/valid';
                 $fields =array(
                     'product_id' => $data['products'][$i]->id
                 );
@@ -871,7 +871,7 @@ class ProductController extends AdminController{
 
     // delete serial
     public function deleteSerial(Request $request) {
-        $path='http://athath-ads.tk/api/serials/delete/' . $request->serial_id;
+        $path=env('SERIALS_BASE_URL') . 'api/serials/delete/' . $request->serial_id;
         $result = APIHelpers::fetchApi($path, [], 'json', 'get');
         $product = Product::where('id', $request->product_id)->select('id', 'total_quatity', 'remaining_quantity')->first();
         $product->update(['remaining_quantity' => $product->remaining_quantity - 1, 'total_quatity' => $product->total_quatity - 1]);

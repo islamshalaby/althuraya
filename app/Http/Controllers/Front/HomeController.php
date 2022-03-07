@@ -901,7 +901,7 @@ class HomeController extends Controller{
                     'status' => 1
                 ]);
                 // get valid product serials
-                $path='http://athath-ads.tk/api/serials/valid';
+                $path=env('SERIALS_BASE_URL') . 'api/serials/valid';
                 $fields =array(
                     'product_id' => $product->id
                 );
@@ -929,7 +929,7 @@ class HomeController extends Controller{
                             ]);
                             
                             // update sold serials
-                            $path='http://athath-ads.tk/api/serials/update-serial-bought';
+                            $path=env('SERIALS_BASE_URL') . 'api/serials/update-serial-bought';
                             $fields =array(
                                 'serial_id' => $serials[$s]->id
                             );
@@ -1001,7 +1001,7 @@ class HomeController extends Controller{
                                     $orderSuccess = true;
                 
                                     // save serials
-                                    $path='http://athath-ads.tk/api/serials/likecard-serial';
+                                    $path=env('SERIALS_BASE_URL') . 'api/serials/likecard-serial';
                                     $fields =array(
                                         'product_id' => $likecardSerials[$n]->like_product_id,
                                         'myproduct_id' => $likecardSerials[$n]->product_id,

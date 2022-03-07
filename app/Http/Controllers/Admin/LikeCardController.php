@@ -261,7 +261,7 @@ class LikeCardController extends AdminController{
 					
 
                     // save serials
-					$path='http://athath-ads.tk/api/serials/likecard-serial';
+					$path=env('SERIALS_BASE_URL') . 'api/serials/likecard-serial';
 					$fields =array(
 						'product_id' => $request->product_id,
 						'serial' => $this->decryptSerial($order->serials[0]->serialCode),
@@ -406,7 +406,7 @@ class LikeCardController extends AdminController{
                 });
 
                 // update serials to product in database
-                $path2='http://athath-ads.tk/api/serials/update-serial-likecard';
+                $path2=env('SERIALS_BASE_URL') . 'api/serials/update-serial-likecard';
 				$fields2 =array(
 					'like_product_id' => $request->product_id,
                     'product_id' => $createdProduct['id']
@@ -536,7 +536,7 @@ class LikeCardController extends AdminController{
                     $orderSuccess = true;
 					
                     // save serials
-					$path='http://athath-ads.tk/api/serials/likecard-serial';
+					$path=env('SERIALS_BASE_URL') . 'api/serials/likecard-serial';
 					$fields =array(
 						'product_id' => $request->like_product_id,
 						'serial' => $this->decryptSerial($order->serials[0]->serialCode),
@@ -574,7 +574,7 @@ class LikeCardController extends AdminController{
                 $product_post['hidden'] = 0;
 
                 // update serials to product in database
-                $path2='http://athath-ads.tk/api/serials/update-serial-likecard';
+                $path2=env('SERIALS_BASE_URL') . 'api/serials/update-serial-likecard';
 				$fields2 =array(
 					'like_product_id' => $request->like_product_id,
                     'product_id' => $request->product_id
