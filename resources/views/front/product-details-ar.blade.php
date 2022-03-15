@@ -51,24 +51,22 @@ ul.breadcrumb {
             <div class="container p-0">
                 <ul class="breadcrumb">
                     <li><a href="{{ route('front.home') }}">الرئيسية</a></li>
-                    <li><a href="#">{{$data->category->title_ar}}</a></li>
+                    <li><a href="{{ !empty($data->sub_category_id) ? route('front.subcategories', ['category_id' => $data->category_id]) : route('front.products_ar', ['category_id' => $data->category_id]) }}">{{$data->category->title_ar}}</a></li>
                     @if (!empty($data->sub_category_id))
-                    <li><a href="#">{{$data->subCategory->title_ar}}</a></li>
+                    <li><a href="{{ !empty($data->sub_category_two_id) ? route('front.subcategories', ['sub_category_id' => $data->sub_category_id]) : route('front.products_ar', ['sub_category_id' => $data->sub_category_id]) }}">{{$data->subCategory->title_ar}}</a></li>
                     @endif
                     @if (!empty($data->sub_category_two_id))
-                    <li><a href="#">{{$data->subCategoryTwo->title_ar}}</a></li>
+                    <li><a href="{{ !empty($data->sub_category_three_id) ? route('front.subcategories', ['sub_category_two_id' => $data->sub_category_two_id]) : route('front.products_ar', ['sub_category_two_id' => $data->sub_category_two_id]) }}">{{$data->subCategoryTwo->title_ar}}</a></li>
                     @endif
                     @if (!empty($data->sub_category_three_id))
-                    <li><a href="#">{{$data->subCategoryThree->title_ar}}</a></li>
+                    <li><a href="{{ !empty($data->sub_category_four_id) ? route('front.subcategories', ['sub_category_three_id' => $data->sub_category_three_id]) : route('front.products_ar', ['sub_category_three_id' => $data->sub_category_three_id]) }}">{{$data->subCategoryThree->title_ar}}</a></li>
                     @endif
                     @if (!empty($data->sub_category_four_id))
-                    <li><a href="#">{{$data->subCategoryFour->title_ar}}</a></li>
+                    <li><a href="{{ !empty($data->sub_category_five_id) ? route('front.subcategories', ['sub_category_four_id' => $data->sub_category_four_id]) : route('front.products_ar', ['sub_category_four_id' => $data->sub_category_four_id]) }}">{{$data->subCategoryFour->title_ar}}</a></li>
                     @endif
-                    @if (!empty($data->sub_category_four_id))
-                    <li><a href="#">{{$data->subCategoryFour->title_ar}}</a></li>
-                    @endif
+                   
                     @if (!empty($data->sub_category_five_id))
-                    <li><a href="#">{{$data->subCategoryFive->title_ar}}</a></li>
+                    <li><a href="{{ route('front.products_ar', ['sub_category_five_id' => $data->sub_category_five_id]) }}">{{$data->subCategoryFive->title_ar}}</a></li>
                     @endif
                     <li>{{$data->title}}</li>
                 </ul>
@@ -164,7 +162,7 @@ ul.breadcrumb {
                                                     <a href="{{ route('front.login') }}" class="favorite-pr {{ $offer->favorite == true ? 'Active' : '' }}"><i></i></a>
                                                     @endif
                                                     <img src="https://res.cloudinary.com/{{ cloudinary_app_name() }}/image/upload/w_245,h_245,q_100/v1581928924/{{ $offer->main_image }}">
-                                                    <div class="outdated {{ $offer->remaining_quantity == 0 ? 'show' : '' }}">
+                                                    <div style="top : 52px" class="outdated {{ $offer->remaining_quantity == 0 ? 'show' : '' }}">
                                                         غير متوفر فى المخزون
                                                     </div>
                                                     <div class="mask ">

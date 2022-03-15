@@ -242,7 +242,8 @@ class HomeController extends Controller{
             $toCurr = $webVisitor->country->currency_en;
             $currency = $this->gSliderAdetCurrency($toCurr);
             $request->lang = 'ar';
-            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief', 'remaining_quantity'], [], 'paginate', 12, ['images'], $currency['value'], $this->country->id, auth()->guard('user')->user(), $request->category_id, $request->sub_category_id, $request->sub_category_two_id, $request->sub_category_three_id, $request->sub_category_four_id, $request->sub_category_five_id);
+            $data = $this->getProductsWithSelect(['id', 'title_ar as title', 'offer', 'final_price', 'price_before_offer', 'offer_percentage', 'brief_' . $request->lang . ' as brief', 'remaining_quantity', 'sub_category_id', 'sub_category_two_id', 'sub_category_three_id', 'sub_category_four_id', 'sub_category_four_id', 'sub_category_five_id'],
+             [], 'paginate', 12, ['images'], $currency['value'], $this->country->id, auth()->guard('user')->user(), $request->category_id, $request->sub_category_id, $request->sub_category_two_id, $request->sub_category_three_id, $request->sub_category_four_id, $request->sub_category_five_id);
 
             return view('front.products-list-ar',compact('data','currency_data','web_image'));
         }else {

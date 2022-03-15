@@ -131,7 +131,13 @@ class AuthController extends Controller{
             $visitor = WebVisitor::where('ip', $ip)->first();
             if ($visitor) {
                 $visitor->update(['user_id' => Auth::guard('user')->user()->id]);
+                $cart = Cart::where('web_visitor_id', $visitor->id)->get();
+
+                if (count($cart) > 0) {
+                    return redirect()->route('front.cart');
+                }
             }
+            
             return redirect('/');
         }
         Alert::error('تسجيل دخول خاطئ', 'البريد الإلكترونى أو كلمة المرور غير صحيحة أو حسابك غير مفعل');

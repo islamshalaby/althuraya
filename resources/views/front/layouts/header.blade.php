@@ -140,29 +140,11 @@
                 </div>
                 <div class="contact-info d-flex TopBarLeft align-items-center">
                     <ul class="navbar-nav">
-                        {{--  <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
-                                    class="bi bi-currency-exchange"></i>العمله</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item " href="#">الدينار الكويتى (KWD)</a>
-                                <a class="dropdown-item " href="#">الريال السعودى (SAR)</a>
-                                <a class="dropdown-item " href="#">الجنيه المصرى (EGP)</a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span><img
-                                        src="/front/assets/img/fg-sa.PNG" border="0" /> </span>عربى</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item " href="#"><span><img src="/front/assets/img/fg-usa.PNG" border="0" />
-                                    </span>Einglish </a>
-                                <a class="dropdown-item " href="#"><span><img src="/front/assets/img/fg-fr.PNG" border="0" />
-                                    </span>French</a>
-                            </div>
-                        </li>  --}}
+                        
                         <li class="nav-item dropdown">
 
                             @if (isset(Auth::guard('user')->user()->id))
-                            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bi bi-person-fill"></i>اسم المستخدم</a>
+                            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bi bi-person-fill"></i>{{ Auth::guard('user')->user()->name ? Auth::guard('user')->user()->name : Auth::guard('user')->user()->email }}</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item " href="{{ route('front.orders') }}">الطلبات السابقة</a>
                                 <a class="dropdown-item " href="{{ route('front.change.password') }}">تغيير كلمة المرور</a>
