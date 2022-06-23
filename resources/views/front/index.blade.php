@@ -864,7 +864,7 @@
                         <h4>يمكنك تحميل التطبيق من خلال :<span>.</span></h4>
                         <div class="d-flex dowFooter">
                             <a href="#"><img src="/front/assets/img/dow2.png" alt="" /></a>
-                            <a href="#"><img src="/front/assets/img/dow.png" alt="" /></a>
+                            <a href="https://play.google.com/store/apps/details?id=com.usmart.com.althuraya"><img src="/front/assets/img/dow.png" alt="" /></a>
                         </div>
                     </div>
 

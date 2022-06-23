@@ -27,6 +27,7 @@ class OrderController extends AdminController{
         $data['sum_total'] = $data['orders']->sum('total_price');
         $data['orders'] = $data['orders']->get();
         
+        
         return view('admin.orders' , ['data' => $data]);
     }
 

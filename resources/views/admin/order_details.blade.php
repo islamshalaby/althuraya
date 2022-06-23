@@ -92,10 +92,12 @@
                             <td>
                                 {{ $item->product->final_price . " " . __('messages.dinar') }}
                             </td>
+                            
                             <td>
                                 @if (count($item->serials) > 0)
                                 @foreach ($item->serials as $serial)
                                 <span class="badge outline-badge-warning">{{ $serial->serial }}</span>
+                                {{--  <span class="badge outline-badge-warning">{{ !empty($serial->transaction) ? $serial->transaction->price . " " . __('messages.dinar') : "" }}</span>  --}}
                                 @endforeach
                                 @endif
                             </td>

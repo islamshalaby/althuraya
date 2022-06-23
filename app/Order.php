@@ -29,6 +29,8 @@ class Order extends Model
         'main_id'
     ];
 
+    protected $appends = ['Like_card_price'];
+
     protected $dates = ['from_deliver_date', 'to_deliver_date'];
 
     public function user() {
@@ -61,6 +63,13 @@ class Order extends Model
 
     public function oItems() {
         return $this->hasMany('App\OrderItem', 'order_id');
+    }
+
+    public function getLikeCardPriceAttribute() {
+        $items = $this->oItems()->pluck('id')->toArray();
+        $serials = OrderSerial::whereIn("order_id", $items)->pluck('serial')->toArray();
+        $data = Transaction::whereIn('serial_code', $serials)->sum("price");
+        return $data;
     }
 
     public function canceledItems() {

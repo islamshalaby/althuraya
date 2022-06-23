@@ -153,6 +153,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                             <th>{{ __('messages.order_number') }}</th>
                             <th>{{ __('messages.order_date') }}</th>
                             <th>{{ __('messages.user') }}</th>
+                            <th>{{ __('messages.buy_price') }}</th>
                             <th>{{ __('messages.price') }}</th>
                             <th class="text-center hide_col">{{ __('messages.details') }}</th>
                             <th class="text-center hide_col">{{ __('messages.invoice') }}</th>
@@ -171,7 +172,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                                     {{ $order->user->name }}
                                     </a>
                                 </td>
-                                
+                                <td>{{ $order->Like_card_price . " " . __('messages.dinar') }}</td>
                                 <td>{{ $order->subtotal_price . " " . __('messages.dinar') }}</td>
                                 <td class="text-center blue-color hide_col"><a href="{{ route('orders.details', $order->id) }}" ><i class="far fa-eye"></i></a></td>
                                 <td class="text-center blue-color hide_col"><a target="_blank" href="{{ route('webview.invoice', $order->id) }}" ><i class="far fa-eye"></i></a></td>

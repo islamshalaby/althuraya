@@ -58,8 +58,22 @@
                         <h4>يمكنك تحميل التطبيق من خلال :<span>.</span></h4>
                         <div class="d-flex dowFooter">
                             <a href="#"><img src="/front/assets/img/dow2.png" alt="" /></a>
-                            <a href="#"><img src="/front/assets/img/dow.png" alt="" /></a>
+                            <a href="https://play.google.com/store/apps/details?id=com.usmart.com.althuraya"><img src="/front/assets/img/dow.png" alt="" /></a>
                         </div>
+						<table style="text-align:center; margin: auto;">
+							<tr>
+								<td>
+								<img width="60" style="margin:3px;" src="https://www.myfatoorah.com/assets/img/logo2.jpg"/></td>
+								<td>
+								<img width="60" style="margin:3px;" src="https://www.myfatoorah.com/assets/img/logo1.jpg"/></td>
+								<td>
+								<img width="60" style="margin:3px;" src="https://www.myfatoorah.com/assets/img/logo3.jpg"/></td>
+								<td>
+								<img width="60" style="margin:3px;" src="https://www.myfatoorah.com/assets/img/logo7.jpg"/></td>
+								<td>
+								<img width="60" style="margin:3px;" src="https://www.myfatoorah.com/assets/img/logo8.jpg"/></td>
+							</tr>
+						</table>
                     </div>
 
                 </div>

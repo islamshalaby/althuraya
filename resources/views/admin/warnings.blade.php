@@ -37,7 +37,7 @@
                             <tr class="{{ $warning->seen == 0 ? 'unread' : '' }}" >
                                 <td><?=$i;?></td>
                                 <td>{{ $warning->message }}</td>
-                                <td><a target="_blank" href="{{ route('products.details', $warning->product_id) }}">{{ $warning->product->title }}</a></td>
+                                <td><a target="_blank" href="{{ route('products.details', $warning->product_id) }}">{{ $warning->product ? $warning->product->title : '' }}</a></td>
                                 <td>{{ $warning->created_at }}</td>
                                 <td>
                                     <form method="post" action="{{ route('warnings.update', $warning->id) }}">
